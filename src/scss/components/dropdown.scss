@@ -1,0 +1,58 @@
+@import '../variables';
+@import '../mixins';
+@import 'compass/css3';
+
+.mivhak-dropdown {
+    position: absolute;
+    right: 0;
+    margin: 20px 7px;
+    z-index: 1000;
+    display: none;
+    @include box-shadow( 0 8px 20px -4px rgba(0, 0, 0, 0.2), 0 0 3px rgba(0, 0, 0, 0.1) );
+    @include border-radius( 4px );
+    
+    &::before {
+        @include triangle(top, 9px, rgba(0, 0, 0, 0.03));
+        position: absolute;
+        right: 6px;
+        bottom: 100%;
+    }
+    
+    &::after {
+        @include triangle(top, 7px);
+        position: absolute;
+        right: 8px;
+        bottom: 100%;
+    }
+    
+    &.mivhak-dropdown-visible {display: block;}
+    
+    .mivhak-dropdown-button {
+        line-height: 12px;
+        white-space: nowrap;
+        padding: 0.7em 1.2em;
+        font-size: 0.8em;
+        cursor: pointer;
+        @include transition( all 0.3s ease-out );
+        
+        &:hover {
+
+        }
+        
+        &:first-child {border-top: none;}
+    }
+}
+
+[miv-theme="light"] {
+    .mivhak-dropdown {background-color: $theme-light-dropdown-bg}
+    .mivhak-dropdown::after {border-bottom-color: $theme-light-dropdown-bg}
+    .mivhak-dropdown-button {color: $theme-light-color;border-top: 1px solid $theme-light-background;}
+    .mivhak-dropdown-button:hover {background-color: $theme-light-background;}
+}
+
+[miv-theme="dark"] {
+    .mivhak-dropdown {background-color: $theme-dark-dropdown-bg}
+    .mivhak-dropdown::after {border-bottom-color: $theme-dark-dropdown-bg}
+    .mivhak-dropdown-button {color: $theme-dark-color;border-top: 1px solid $theme-dark-background;}
+    .mivhak-dropdown-button:hover {background-color: $theme-dark-background;}
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="../build/mivhak-dev.js"></script>
+        
+        <!-- styles -->
+        <link href="../build/mivhak.min.css" rel="stylesheet" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <style>
+            html {height: 100%;}
+            body {font-family: Roboto;margin: 0;height: 100%;}
+            .box {width: 760px;margin:40px auto}
+            .dark-bg {background-color: #1b2632;display: flex;}
+            .dark-bg h2 {color: #ecf0f1}
+        </style>
+    </head>
+    <body>
+        <div class="light-bg">
+            <div class="box">
+                <h2>Light Theme</h2>
+                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false">
+                    <pre miv-lang="html" miv-run-as="markup">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;&lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Hello World&lt;/h1&gt;
+        &lt;p&gt;Hi&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </pre>
+                    <pre miv-lang="javascript" miv-run-as="script">
+function add(x, y) {
+    var resultString = "Hello, ACE! The result of your math is: ";
+    var result = x + y;
+    return resultString + result;
+}
+
+var addResult = add(3, 2);
+console.log(addResult);
+                    </pre>
+                    <pre miv-lang="css" miv-run-as="style">
+                    body {background: blue}
+                    </pre>
+                    <div class="mivhak-caption">Caption Text Here....</div>
+                </div>
+            </div>
+        </div>
+        <div class="dark-bg">
+            <div class="box">
+                <h2>Dark Theme</h2>
+                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="dark">
+                    <pre miv-lang="html" miv-run-as="markup">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;&lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Hello World&lt;/h1&gt;
+        &lt;p&gt;Hi&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </pre>
+                    <pre miv-lang="javascript" miv-run-as="script">
+function add(x, y) {
+    var resultString = "Hello, ACE! The result of your math is: ";
+    var result = x + y;
+    return resultString + result;
+}
+
+var addResult = add(3, 2);
+console.log(addResult);
+                    </pre>
+                    <pre miv-lang="css" miv-run-as="style">
+                    body {background: blue}
+                    </pre>
+                    <div class="mivhak-caption">Caption Text Here....</div>
+                </div>
+            </div>
+        </div>
+        <script>$('.mivhak').mivhak();</script>
+    </body>
+</html>

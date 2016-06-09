@@ -1,0 +1,34 @@
+{
+  "name": "mivhak-js",
+  "nicename": "Mivhak Code Viewer",
+  "version": "1.0.0",
+  "tagline": "JavaScript code viewer for the web",
+  "description": "A lightweight yet fully-featured code viewer with support for tabs, live preview and remote code viewing",
+  "url": "http://products.askupasoftware.com/mivhak-js",
+  "author": {
+    "name": "Askupa Software",
+    "url": "http://www.askupasoftware.com",
+    "email": "contact@askupasoftware.com"
+  },
+  "main": "GruntFile.js",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-compass": "^0.9.0",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-replace": "^0.7.8",
+    "grunt-strip-code": "^1.0.4",
+    "grunt-sync": "^0.5.2"
+  },
+  "repositories": [
+    {
+      "type": "svn",
+      "url": "http://plugins.svn.wordpress.org/mivhak/"
+    }
+  ],
+  "dependencies": {
+    "grunt-ts": "^5.5.0-beta.2"
+  }
+}

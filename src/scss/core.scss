@@ -1,0 +1,16 @@
+@import 'variables';
+@import 'compass/css3';
+
+.mivhak {
+    font-family: Roboto;
+    
+    .mivhak-caption {
+        font-size: 12px;
+        font-style: italic;
+        text-align: center;
+        margin: 5px;
+    }
+    
+    &[miv-theme="light"] .mivhak-caption {color: $theme-light-color}
+    &[miv-theme="dark"] .mivhak-caption {color: $theme-dark-color}
+}

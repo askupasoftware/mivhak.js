@@ -1,0 +1,41 @@
+@import '../variables';
+@import 'compass/css3';
+
+$toggle-height: 12px;
+$toggle-width: 24px;
+
+.mivhak-toggle {
+    width: $toggle-width;
+    height: $toggle-height;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px;
+    @include transition( all 150ms ease-out );
+    @include border-radius($toggle-height);
+    
+    &.mivhak-toggle-on .mivhak-toggle-knob {left: $toggle-width - $toggle-height}
+    
+    &.mivhak-toggle-off .mivhak-toggle-knob {left: 0}
+    
+    .mivhak-toggle-knob {
+        background-color: white;
+        width: $toggle-height - 4;
+        height: $toggle-height - 4;
+        margin: 2px;
+        position: absolute;
+        @include transition( all 150ms ease-out );
+        @include border-radius(50%);
+    }
+}
+
+[miv-theme="light"] {
+    .mivhak-toggle-on {background-color: $theme-light-green;}
+    .mivhak-toggle-off {background-color: $theme-light-color;}
+}
+
+[miv-theme="dark"] {
+    .mivhak-toggle-on {background-color: $theme-dark-green;}
+    .mivhak-toggle-off {background-color: $theme-dark-color;}
+}

@@ -1,0 +1,43 @@
+@import '../variables';
+@import 'compass/css3';
+
+.mivhak-top-bar {
+    position: relative;
+
+    .mivhak-nav-tabs {
+        
+    }
+    
+    .mivhak-controls {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    
+    .mivhak-top-bar-button {
+        display: inline-block;
+        padding: 0.9em 1.2em;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        
+        &.mivhak-icon {
+            line-height: 0;
+            height: 15px;
+            width: 15px;
+            vertical-align: middle;
+            position: relative;
+        }
+    }
+}
+
+[miv-theme="light"] {
+    .mivhak-top-bar-button {color: $theme-light-color}
+    .mivhak-icon svg {fill: $theme-light-color;}
+}
+
+[miv-theme="dark"] {
+    .mivhak-top-bar-button {color: $theme-dark-color}
+    .mivhak-icon svg {fill: $theme-dark-color;}
+}

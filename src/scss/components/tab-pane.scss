@@ -1,0 +1,25 @@
+@import '../variables';
+@import 'compass/css3';
+
+.mivhak-tab-pane {
+    display: none;
+    padding: 15px;
+    @include border-radius(5px);
+    @include box-shadow(inset 0 2px 2px rgba(0, 0, 0, 0.05));
+    
+    &.mivhak-tab-pane-active {
+        display: block;
+    }
+    
+    pre {
+        background-color: transparent;
+        margin: 0;
+        
+        .ace_scroller {
+            box-shadow: none;
+        }
+    }
+}
+
+[miv-theme="light"] .mivhak-tab-pane { background-color: $theme-light-background; }
+[miv-theme="dark"] .mivhak-tab-pane { background-color: $theme-dark-background; }
