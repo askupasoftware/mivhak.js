@@ -18,6 +18,7 @@ Mivhak.component('tab-pane', {
         this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
         this.editor.getSession().setMode("ace/mode/"+this.lang);
         this.editor.getSession().setUseWorker(false); // Disable syntax checking
+        this.editor.getSession().setUseWrapMode(this.mivhakInstance.state.lineWrap); // Set initial line wrapping
         
         this.editor.setOptions({
             maxLines: Infinity,
@@ -34,7 +35,7 @@ Mivhak.component('tab-pane', {
         },
         setOptions: function() {
             var $this = this;
-            $.each(Mivhak.readAttributes(this.pre), function(name, value){
+            $.each(readAttributes(this.pre), function(name, value){
                 $this[name] = value;
             });
         },

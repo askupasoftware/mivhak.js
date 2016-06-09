@@ -31,9 +31,25 @@ function toCamelCase( str )
     });
 }
 
+/**
+ * Reads the element's 'miv-' attributes and returns their values as an object
+ */
+function readAttributes( el ) 
+{
+    var options = {};
+    $.each(el.attributes, function(i, attr){
+        if(/^miv-/.test(attr.name))
+        {
+            options[toCamelCase(attr.name.substr(4))] = strToValue(attr.value);
+        }
+    });
+    return options;
+}
+
 /* test-code */
 testapi.strToValue = strToValue;
 testapi.toCamelCase = toCamelCase;
+testapi.readAttributes = readAttributes;
 /* end-test-code *//**
  * The constructor
  * 
@@ -48,11 +64,22 @@ function Mivhak( selection, options )
 }
 
 /**
- * Plugin's methods. 
+ * jQuery plugin's methods. 
  * In all methods, the 'this' keyword is pointing to the calling instance of Mivhak.
+ * These functions serve as the plugin's public API.
  */
 Mivhak.methods = {
-    
+    toggleLineWrap: function() {
+        var $this = this;
+        this.state.lineWrap = !this.state.lineWrap;
+        $.each(this.tabs.tabs, function(i,tab) {
+            tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
+            tab.editor.resize();
+        });
+    },
+    update: function(options) {
+        // Update options here
+    }
 };
 
 /**
@@ -65,18 +92,12 @@ Mivhak.methodExists = function( method )
 };
 
 /**
- * Reads the element's 'miv-' attributes and returns their values as an object
+ * 
  */
-Mivhak.readAttributes = function(el) 
-{
-    var options = {};
-    $.each(el.attributes, function(i, attr){
-        if(/^miv-/.test(attr.name))
-        {
-            options[toCamelCase(attr.name.substr(4))] = strToValue(attr.value);
-        }
-    });
-    return options;
+Mivhak.prototype.state = {
+    lineWrap:   true,
+    collapsed:  false,
+    activeTab:  0
 };
 
 /**
@@ -88,15 +109,32 @@ Mivhak.prototype.setOptions = function( options )
     // If options were already set, update them
     if( typeof this.options !== 'undefined' )
     {
-        this.options = $.extend(true, {}, this.options, options, Mivhak.readAttributes(this.$selection[0]));
+        this.options = $.extend(true, {}, this.options, options, readAttributes(this.$selection[0]));
     }
     // Otherwise, merge them with the defaults
     else
     {
-        this.options = $.extend(true, {}, Mivhak.defaults, options, Mivhak.readAttributes(this.$selection[0]));
+        this.options = $.extend(true, {}, Mivhak.defaults, options, readAttributes(this.$selection[0]));
     }
 };
 
+/**
+ * 
+ * @param {type} methodName
+ */
+Mivhak.prototype.callMethod = function( methodName, args )
+{
+    if(Mivhak.methodExists(methodName))
+    {
+        Mivhak.methods[methodName].apply(this, args);
+    }
+};
+
+/**
+ * 
+ * @param {type} name
+ * @param {type} props
+ */
 Mivhak.render = function(name, props)
 {
     var component = $.extend(true, {}, Mivhak.components[name]);
@@ -135,12 +173,18 @@ Mivhak.prototype.init = function()
     this.createTopBar();
 };
 
+/**
+ * 
+ */
 Mivhak.prototype.createTabs = function() 
 {
     this.tabs = Mivhak.render('tabs',{mivhakInstance: this});
     this.$selection.prepend(this.tabs.$el);
 };
 
+/**
+ * 
+ */
 Mivhak.prototype.createTopBar = function() 
 {
     this.topbar = Mivhak.render('top-bar',{mivhakInstance: this});
@@ -184,7 +228,9 @@ Mivhak.component = function(name, options)
             if(item.toggle) 
             {
                 button.$toggle = Mivhak.render('toggle');
-                button.click(function(){button.$toggle.toggle();});
+                
+                // Toggle only if not clicking on the toggle itself (which makes it toggle as it is)
+                button.click(function(e){if($(e.target).parents('.mivhak-dropdown-button').length !== 1)button.$toggle.toggle();});
                 button.append(button.$toggle.$el);
             }
             $this.$el.append(button);
@@ -205,7 +251,7 @@ var dropdownButtons = {
         toggle: true, 
         click: function(e) {
             e.stopPropagation();
-            console.log(this);
+            this.callMethod('toggleLineWrap');
         }
     },
     copy: {
@@ -249,6 +295,7 @@ var dropdownButtons = {
         this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
         this.editor.getSession().setMode("ace/mode/"+this.lang);
         this.editor.getSession().setUseWorker(false); // Disable syntax checking
+        this.editor.getSession().setUseWrapMode(this.mivhakInstance.state.lineWrap); // Set initial line wrapping
         
         this.editor.setOptions({
             maxLines: Infinity,
@@ -265,7 +312,7 @@ var dropdownButtons = {
         },
         setOptions: function() {
             var $this = this;
-            $.each(Mivhak.readAttributes(this.pre), function(name, value){
+            $.each(readAttributes(this.pre), function(name, value){
                 $this[name] = value;
             });
         },

@@ -13,7 +13,9 @@ Mivhak.component('dropdown', {
             if(item.toggle) 
             {
                 button.$toggle = Mivhak.render('toggle');
-                button.click(function(){button.$toggle.toggle();});
+                
+                // Toggle only if not clicking on the toggle itself (which makes it toggle as it is)
+                button.click(function(e){if($(e.target).parents('.mivhak-dropdown-button').length !== 1)button.$toggle.toggle();});
                 button.append(button.$toggle.$el);
             }
             $this.$el.append(button);
@@ -34,7 +36,7 @@ var dropdownButtons = {
         toggle: true, 
         click: function(e) {
             e.stopPropagation();
-            console.log(this);
+            this.callMethod('toggleLineWrap');
         }
     },
     copy: {

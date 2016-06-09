@@ -13,11 +13,11 @@ QUnit.test( "toCamelCase", function( assert ) {
 });
 
 QUnit.test( "readAttributes", function( assert ) {
-    assert.deepEqual( testapi.mivhak.readAttributes($('<div miv-attr="value" miv-attr-two="value">')[0]), {
+    assert.deepEqual( testapi.readAttributes($('<div miv-attr="value" miv-attr-two="value">')[0]), {
         attr: "value",
         attrTwo: "value"
     });
-    assert.deepEqual( testapi.mivhak.readAttributes($('<div miv-bool="true" miv-number="14">')[0]), {
+    assert.deepEqual( testapi.readAttributes($('<div miv-bool="true" miv-number="14">')[0]), {
         bool: true,
         number: 14
     });
