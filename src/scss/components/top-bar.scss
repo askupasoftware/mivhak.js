@@ -21,6 +21,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
+        @include user-select( none );
         
         &.mivhak-icon {
             line-height: 0;

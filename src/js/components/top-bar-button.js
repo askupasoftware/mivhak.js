@@ -4,11 +4,11 @@ Mivhak.component('top-bar-button', {
         text: null,
         icon: null,
         dropdown: null,
+        mivhakInstance: null,
         onClick: function(){}
     },
     events: {
         click: function() {
-            $(this).toggleClass('mivhak-button-active');
             this.onClick();
         }
     },

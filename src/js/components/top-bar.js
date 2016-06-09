@@ -25,6 +25,7 @@ Mivhak.component('top-bar', {
         // Create buttons on right
         $this.controls.push(Mivhak.render('top-bar-button',{
             icon: 'play',
+            mivhakInstance: $this.mivhakInstance,
             onClick: function() {
                 
             }
@@ -32,7 +33,9 @@ Mivhak.component('top-bar', {
         
         $this.controls.push(Mivhak.render('top-bar-button',{
             icon: 'cog',
+            mivhakInstance: $this.mivhakInstance,
             dropdown: Mivhak.render('dropdown',{
+                mivhakInstance: $this.mivhakInstance,
                 items: this.mivhakInstance.options.buttons
             })
         }));

@@ -2,16 +2,18 @@ Mivhak.component('dropdown', {
     template: '<div class="mivhak-dropdown"></div>',
     props: {
         items: [],
+        mivhakInstance: null,
         visible: false
     },
     created: function() {
         var $this = this;
         $.each(this.items, function(i, item) {
             if( typeof item === 'string') item = dropdownButtons[item];
-            var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: item.click});
+            var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: function(e){item.click.call($this.mivhakInstance,e);}});
             if(item.toggle) 
             {
                 button.$toggle = Mivhak.render('toggle');
+                button.click(function(){button.$toggle.toggle();});
                 button.append(button.$toggle.$el);
             }
             $this.$el.append(button);

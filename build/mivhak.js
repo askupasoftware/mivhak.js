@@ -165,16 +165,18 @@ Mivhak.component = function(name, options)
     template: '<div class="mivhak-dropdown"></div>',
     props: {
         items: [],
+        mivhakInstance: null,
         visible: false
     },
     created: function() {
         var $this = this;
         $.each(this.items, function(i, item) {
             if( typeof item === 'string') item = dropdownButtons[item];
-            var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: item.click});
+            var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: function(e){item.click.call($this.mivhakInstance,e);}});
             if(item.toggle) 
             {
                 button.$toggle = Mivhak.render('toggle');
+                button.click(function(){button.$toggle.toggle();});
                 button.append(button.$toggle.$el);
             }
             $this.$el.append(button);
@@ -317,11 +319,11 @@ var dropdownButtons = {
         text: null,
         icon: null,
         dropdown: null,
+        mivhakInstance: null,
         onClick: function(){}
     },
     events: {
         click: function() {
-            $(this).toggleClass('mivhak-button-active');
             this.onClick();
         }
     },
@@ -379,6 +381,7 @@ var dropdownButtons = {
         // Create buttons on right
         $this.controls.push(Mivhak.render('top-bar-button',{
             icon: 'play',
+            mivhakInstance: $this.mivhakInstance,
             onClick: function() {
                 
             }
@@ -386,7 +389,9 @@ var dropdownButtons = {
         
         $this.controls.push(Mivhak.render('top-bar-button',{
             icon: 'cog',
+            mivhakInstance: $this.mivhakInstance,
             dropdown: Mivhak.render('dropdown',{
+                mivhakInstance: $this.mivhakInstance,
                 items: this.mivhakInstance.options.buttons
             })
         }));
