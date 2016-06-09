@@ -29,6 +29,16 @@
             vertical-align: middle;
             position: relative;
         }
+        
+        &.mivhak-icon-cog.mivhak-button-active > svg {
+            @include transform( rotateZ(45deg) );
+        }
+        
+        &.mivhak-icon-play.mivhak-button-active > svg {
+             
+        }
+        
+        &> svg {@include transition( all 0.3s ease-out );}
     }
 }
 

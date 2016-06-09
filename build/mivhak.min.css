@@ -2,7 +2,7 @@
  * Package: mivhak-js
  * URL:     http://products.askupasoftware.com/mivhak-js
  * Version: 1.0.0
- * Date:    2016-06-08
+ * Date:    2016-06-09
  * License: GNU GENERAL PUBLIC LICENSE
  *
  * Developed by Askupa Software http://www.askupasoftware.com
@@ -13,7 +13,7 @@
 
 .mivhak-toggle{width:24px;height:12px;position:relative;cursor:pointer;display:inline-block;vertical-align:middle;margin-left:15px;-moz-transition:all 150ms ease-out;-o-transition:all 150ms ease-out;-webkit-transition:all 150ms ease-out;transition:all 150ms ease-out;-moz-border-radius:12px;-webkit-border-radius:12px;border-radius:12px}.mivhak-toggle.mivhak-toggle-on .mivhak-toggle-knob{left:12px}.mivhak-toggle.mivhak-toggle-off .mivhak-toggle-knob{left:0}.mivhak-toggle .mivhak-toggle-knob{background-color:white;width:8px;height:8px;margin:2px;position:absolute;-moz-transition:all 150ms ease-out;-o-transition:all 150ms ease-out;-webkit-transition:all 150ms ease-out;transition:all 150ms ease-out;-moz-border-radius:50%;-webkit-border-radius:50%;border-radius:50%}[miv-theme="light"] .mivhak-toggle-on{background-color:#1abc9c}[miv-theme="light"] .mivhak-toggle-off{background-color:#7f8c8d}[miv-theme="dark"] .mivhak-toggle-on{background-color:#1abc9c}[miv-theme="dark"] .mivhak-toggle-off{background-color:#ecf0f1}
 
-.mivhak-top-bar{position:relative}.mivhak-top-bar .mivhak-controls{position:absolute;right:0;top:0}.mivhak-top-bar .mivhak-top-bar-button{display:inline-block;padding:0.9em 1.2em;font-size:12px;text-transform:uppercase;letter-spacing:1px;cursor:pointer}.mivhak-top-bar .mivhak-top-bar-button.mivhak-icon{line-height:0;height:15px;width:15px;vertical-align:middle;position:relative}[miv-theme="light"] .mivhak-top-bar-button{color:#7f8c8d}[miv-theme="light"] .mivhak-icon svg{fill:#7f8c8d}[miv-theme="dark"] .mivhak-top-bar-button{color:#ecf0f1}[miv-theme="dark"] .mivhak-icon svg{fill:#ecf0f1}
+.mivhak-top-bar{position:relative}.mivhak-top-bar .mivhak-controls{position:absolute;right:0;top:0}.mivhak-top-bar .mivhak-top-bar-button{display:inline-block;padding:0.9em 1.2em;font-size:12px;text-transform:uppercase;letter-spacing:1px;cursor:pointer}.mivhak-top-bar .mivhak-top-bar-button.mivhak-icon{line-height:0;height:15px;width:15px;vertical-align:middle;position:relative}.mivhak-top-bar .mivhak-top-bar-button.mivhak-icon-cog.mivhak-button-active>svg{-moz-transform:rotateZ(45deg);-ms-transform:rotateZ(45deg);-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}.mivhak-top-bar .mivhak-top-bar-button>svg{-moz-transition:all 0.3s ease-out;-o-transition:all 0.3s ease-out;-webkit-transition:all 0.3s ease-out;transition:all 0.3s ease-out}[miv-theme="light"] .mivhak-top-bar-button{color:#7f8c8d}[miv-theme="light"] .mivhak-icon svg{fill:#7f8c8d}[miv-theme="dark"] .mivhak-top-bar-button{color:#ecf0f1}[miv-theme="dark"] .mivhak-icon svg{fill:#ecf0f1}
 
 
 .mivhak{font-family:Roboto}.mivhak .mivhak-caption{font-size:12px;font-style:italic;text-align:center;margin:5px}.mivhak[miv-theme="light"] .mivhak-caption{color:#7f8c8d}.mivhak[miv-theme="dark"] .mivhak-caption{color:#ecf0f1}

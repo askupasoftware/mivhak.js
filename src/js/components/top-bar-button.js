@@ -8,19 +8,35 @@ Mivhak.component('top-bar-button', {
     },
     events: {
         click: function() {
+            $(this).toggleClass('mivhak-button-active');
             this.onClick();
         }
     },
     created: function() {
         var $this = this;
         this.$el.text(this.text);
-        if(this.icon) this.$el.addClass('mivhak-icon').append($(Mivhak.icons[this.icon]));
+        if(this.icon) this.$el.addClass('mivhak-icon mivhak-icon-'+this.icon).append($(Mivhak.icons[this.icon]));
         if(this.dropdown) 
         {
             $this.$el.append(this.dropdown.$el);
             this.onClick = function() {
+                $this.toggleActivation();
                 $this.dropdown.toggle();
             };
+        }
+    },
+    methods: {
+        activate: function() {
+            this.$el.addClass('mivhak-button-active');
+        },
+        deactivate: function() {
+            this.$el.removeClass('mivhak-button-active');
+        },
+        toggleActivation: function() {
+            this.$el.toggleClass('mivhak-button-active');
+        },
+        isActive: function() {
+            return this.$el.hasClass('mivhak-button-active');
         }
     }
 });

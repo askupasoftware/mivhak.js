@@ -14,6 +14,8 @@ Mivhak.component('top-bar', {
                 text: tab.lang,
                 onClick: function() {
                     $this.mivhakInstance.tabs.showTab(i);
+                    $.each($this.navTabs, function(i,navTab){navTab.deactivate();});
+                    this.activate();
                 }
             });
             $this.navTabs.push(button);
