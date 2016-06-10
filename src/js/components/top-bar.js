@@ -1,21 +1,22 @@
 Mivhak.component('top-bar', {
-    template: '<div class="mivhak-top-bar"><div class="mivhak-nav-tabs"></div><div class="mivhak-controls"></div></div>',
+    template: '<div class="mivhak-top-bar"><div class="mivhak-nav-tabs"></div><div class="mivhak-controls"></div><div class="mivhak-line"></div></div>',
     props: {
         mivhakInstance: null,
         navTabs: [],
-        controls: []
+        controls: [],
+        line: null
     },
     created: function() {
         var $this = this;
+        
+        this.line = this.$el.find('.mivhak-line');
         
         // Create tab navigation
         $.each(this.mivhakInstance.tabs.tabs, function(i,tab){
             var button = Mivhak.render('top-bar-button',{
                 text: tab.lang,
                 onClick: function() {
-                    $this.mivhakInstance.tabs.showTab(i);
-                    $.each($this.navTabs, function(i,navTab){navTab.deactivate();});
-                    this.activate();
+                    $this.mivhakInstance.callMethod('showTab',i);
                 }
             });
             $this.navTabs.push(button);
@@ -44,5 +45,17 @@ Mivhak.component('top-bar', {
             $this.controls[0].$el,
             $this.controls[1].$el
         );
+    },
+    methods: {
+        activateNavTab: function(index) {
+            var button = this.navTabs[index];
+            // Deactivate all tabs and activate this tab
+            $.each(this.navTabs, function(i,navTab){navTab.deactivate();});
+            button.activate();
+
+            // Position the line
+            this.line.width(button.$el.width());
+            this.line.css({left:button.$el.position().left + (button.$el.outerWidth() - button.$el.width())/2});
+        }
     }
 });

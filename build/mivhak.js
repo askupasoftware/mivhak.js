@@ -57,25 +57,6 @@ function Mivhak( selection, options )
 }
 
 /**
- * jQuery plugin's methods. 
- * In all methods, the 'this' keyword is pointing to the calling instance of Mivhak.
- * These functions serve as the plugin's public API.
- */
-Mivhak.methods = {
-    toggleLineWrap: function() {
-        var $this = this;
-        this.state.lineWrap = !this.state.lineWrap;
-        $.each(this.tabs.tabs, function(i,tab) {
-            tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
-            tab.editor.resize();
-        });
-    },
-    update: function(options) {
-        // Update options here
-    }
-};
-
-/**
  * Check if a given string represents a supported method
  * @param {string} method
  */
@@ -115,10 +96,14 @@ Mivhak.prototype.setOptions = function( options )
  * 
  * @param {type} methodName
  */
-Mivhak.prototype.callMethod = function( methodName, args )
+Mivhak.prototype.callMethod = function( methodName )
 {
     if(Mivhak.methodExists(methodName))
     {
+        // Call the method with the original arguments, removing the method's name from the list
+        var args = [];
+        Array.prototype.push.apply( args, arguments );
+        args.shift();
         Mivhak.methods[methodName].apply(this, args);
     }
 };
@@ -164,6 +149,7 @@ Mivhak.prototype.init = function()
 {
     this.createTabs();
     this.createTopBar();
+    this.callMethod('showTab',0); // Show first tab initially
 };
 
 /**
@@ -188,11 +174,32 @@ Mivhak.defaults = {
     runnable:       false,
     editable:       false,
     lineNumbers:    false,
+    accentColor:    'currentColor',
     collapsed:      false,
     theme:          'light',
     height:         'auto',
     buttons:        ['wrap','copy','collapse','about'],
     ace:            {}
+};/**
+ * jQuery plugin's methods. 
+ * In all methods, the 'this' keyword is pointing to the calling instance of Mivhak.
+ * These functions serve as the plugin's public API.
+ */
+Mivhak.methods = {
+    toggleLineWrap: function() {
+        var $this = this;
+        this.state.lineWrap = !this.state.lineWrap;
+        $.each(this.tabs.tabs, function(i,tab) {
+            tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
+        });
+    },
+    showTab: function(index) {
+        this.tabs.showTab(index);
+        this.topbar.activateNavTab(index);
+    },
+    update: function(options) {
+        // Update options here
+    }
 };Mivhak.icons = {};
 
 // <div>Icons made by <a href="http://www.flaticon.com/authors/egor-rumyantsev" title="Egor Rumyantsev">Egor Rumyantsev</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -328,9 +335,6 @@ var dropdownButtons = {
         this.mivhakInstance.$selection.find('pre').each(function(){
             $this.tabs.push(Mivhak.render('tab-pane',{pre: this, mivhakInstance: $this.mivhakInstance}));
         });
-        
-        // Show first tab initially
-        this.showTab(0);
     },
     methods: {
         showTab: function(index){
@@ -401,23 +405,24 @@ var dropdownButtons = {
         }
     }
 });Mivhak.component('top-bar', {
-    template: '<div class="mivhak-top-bar"><div class="mivhak-nav-tabs"></div><div class="mivhak-controls"></div></div>',
+    template: '<div class="mivhak-top-bar"><div class="mivhak-nav-tabs"></div><div class="mivhak-controls"></div><div class="mivhak-line"></div></div>',
     props: {
         mivhakInstance: null,
         navTabs: [],
-        controls: []
+        controls: [],
+        line: null
     },
     created: function() {
         var $this = this;
+        
+        this.line = this.$el.find('.mivhak-line');
         
         // Create tab navigation
         $.each(this.mivhakInstance.tabs.tabs, function(i,tab){
             var button = Mivhak.render('top-bar-button',{
                 text: tab.lang,
                 onClick: function() {
-                    $this.mivhakInstance.tabs.showTab(i);
-                    $.each($this.navTabs, function(i,navTab){navTab.deactivate();});
-                    this.activate();
+                    $this.mivhakInstance.callMethod('showTab',i);
                 }
             });
             $this.navTabs.push(button);
@@ -446,12 +451,25 @@ var dropdownButtons = {
             $this.controls[0].$el,
             $this.controls[1].$el
         );
+    },
+    methods: {
+        activateNavTab: function(index) {
+            var button = this.navTabs[index];
+            // Deactivate all tabs and activate this tab
+            $.each(this.navTabs, function(i,navTab){navTab.deactivate();});
+            button.activate();
+
+            // Position the line
+            this.line.width(button.$el.width());
+            this.line.css({left:button.$el.position().left + (button.$el.outerWidth() - button.$el.width())/2});
+        }
     }
 });$.fn.mivhak = function( methodOrOptions ) {
         
-    var args = arguments.length > 1 ? Array.apply(null, arguments).slice(1) : null;
+     
     
     return this.each(function(){
+        // If this is an options object, set or update the options
         if( typeof methodOrOptions === 'object' || !methodOrOptions )
         {
             if( typeof $(this).data( 'mivhak' ) === 'undefined' ) {
@@ -467,7 +485,10 @@ var dropdownButtons = {
         // If this is a method call, run the method if it exists
         else if( Mivhak.methodExists( methodOrOptions )  )
         {
-            Mivhak.methods[methodOrOptions].call($(this).data('mivhak'), args);
+            var args = [];
+            Array.prototype.push.apply( args, arguments );
+            args.shift(); // Remove the method's name from the args list
+            Mivhak.methods[methodOrOptions].apply($(this).data('mivhak'), args);
         }
     });
 };}( jQuery ));

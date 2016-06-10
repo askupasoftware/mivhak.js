@@ -42,6 +42,7 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/utility.js',
                         '<%= dirs.js %>/mivhak.js',
                         '<%= dirs.js %>/mivhak.defaults.js',
+                        '<%= dirs.js %>/mivhak.methods.js',
                         '<%= dirs.js %>/mivhak.icons.js',
                         '<%= dirs.js %>/mivhak.component.js',
                         '<%= dirs.js %>/components/*.js',

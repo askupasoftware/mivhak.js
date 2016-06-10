@@ -12,25 +12,6 @@ function Mivhak( selection, options )
 }
 
 /**
- * jQuery plugin's methods. 
- * In all methods, the 'this' keyword is pointing to the calling instance of Mivhak.
- * These functions serve as the plugin's public API.
- */
-Mivhak.methods = {
-    toggleLineWrap: function() {
-        var $this = this;
-        this.state.lineWrap = !this.state.lineWrap;
-        $.each(this.tabs.tabs, function(i,tab) {
-            tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
-            tab.editor.resize();
-        });
-    },
-    update: function(options) {
-        // Update options here
-    }
-};
-
-/**
  * Check if a given string represents a supported method
  * @param {string} method
  */
@@ -70,10 +51,14 @@ Mivhak.prototype.setOptions = function( options )
  * 
  * @param {type} methodName
  */
-Mivhak.prototype.callMethod = function( methodName, args )
+Mivhak.prototype.callMethod = function( methodName )
 {
     if(Mivhak.methodExists(methodName))
     {
+        // Call the method with the original arguments, removing the method's name from the list
+        var args = [];
+        Array.prototype.push.apply( args, arguments );
+        args.shift();
         Mivhak.methods[methodName].apply(this, args);
     }
 };
@@ -119,6 +104,7 @@ Mivhak.prototype.init = function()
 {
     this.createTabs();
     this.createTopBar();
+    this.callMethod('showTab',0); // Show first tab initially
 };
 
 /**

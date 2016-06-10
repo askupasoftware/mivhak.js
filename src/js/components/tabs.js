@@ -10,9 +10,6 @@ Mivhak.component('tabs', {
         this.mivhakInstance.$selection.find('pre').each(function(){
             $this.tabs.push(Mivhak.render('tab-pane',{pre: this, mivhakInstance: $this.mivhakInstance}));
         });
-        
-        // Show first tab initially
-        this.showTab(0);
     },
     methods: {
         showTab: function(index){

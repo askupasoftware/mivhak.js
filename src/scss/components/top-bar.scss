@@ -14,6 +14,13 @@
         top: 0;
     }
     
+    .mivhak-line {
+        height: 3px;
+        position: absolute;
+        bottom: -3px;
+        @include transition( all .2s ease-out );
+    }
+    
     .mivhak-top-bar-button {
         display: inline-block;
         padding: 0.9em 1.2em;
@@ -45,10 +52,16 @@
 
 [miv-theme="light"] {
     .mivhak-top-bar-button {color: $theme-light-color}
+    .mivhak-top-bar-button:hover {color: $theme-light-color-hover}
     .mivhak-icon svg {fill: $theme-light-color;}
+    .mivhak-icon svg:hover {fill: $theme-light-color-hover;}
+    .mivhak-line {background-color: $theme-light-color;}
 }
 
 [miv-theme="dark"] {
     .mivhak-top-bar-button {color: $theme-dark-color}
+    .mivhak-top-bar-button:hover {color: $theme-dark-color-hover}
     .mivhak-icon svg {fill: $theme-dark-color;}
+    .mivhak-icon svg:hover {fill: $theme-dark-color-hover;}
+    .mivhak-line {background-color: $theme-dark-color;}
 }

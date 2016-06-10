@@ -1,8 +1,9 @@
 $.fn.mivhak = function( methodOrOptions ) {
         
-    var args = arguments.length > 1 ? Array.apply(null, arguments).slice(1) : null;
+     
     
     return this.each(function(){
+        // If this is an options object, set or update the options
         if( typeof methodOrOptions === 'object' || !methodOrOptions )
         {
             if( typeof $(this).data( 'mivhak' ) === 'undefined' ) {
@@ -18,7 +19,10 @@ $.fn.mivhak = function( methodOrOptions ) {
         // If this is a method call, run the method if it exists
         else if( Mivhak.methodExists( methodOrOptions )  )
         {
-            Mivhak.methods[methodOrOptions].call($(this).data('mivhak'), args);
+            var args = [];
+            Array.prototype.push.apply( args, arguments );
+            args.shift(); // Remove the method's name from the args list
+            Mivhak.methods[methodOrOptions].apply($(this).data('mivhak'), args);
         }
     });
 };
