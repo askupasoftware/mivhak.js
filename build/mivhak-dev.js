@@ -2,7 +2,7 @@
  * Package: mivhak-js
  * URL:     http://products.askupasoftware.com/mivhak-js
  * Version: 1.0.0
- * Date:    2016-06-09
+ * Date:    2016-06-17
  * License: GNU GENERAL PUBLIC LICENSE
  *
  * Developed by Askupa Software http://www.askupasoftware.com
@@ -46,11 +46,59 @@ function readAttributes( el )
     return options;
 }
 
+// Request animation frame
+var raf = window.requestAnimationFrame || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function(cb) { return window.setTimeout(cb, 1000 / 60); };
+
 /* test-code */
 testapi.strToValue = strToValue;
 testapi.toCamelCase = toCamelCase;
 testapi.readAttributes = readAttributes;
-/* end-test-code *//**
+/* end-test-code */$._components = [];
+
+$.component = function( name, config ) {
+   $._components[name] = config;
+};
+
+/**
+ * 
+ * @param {type} name
+ * @param {type} props
+ */
+$.render = function(name, props)
+{
+    var component = $.extend(true, {}, $._components[name]),
+        data      = {},
+        $el       = $(component.template);
+    
+    // Create the element from the template
+    data.$el = $el;
+    
+    // Create all methods
+    $.each(component.methods, function(name, method){
+        data[name] = function() {return method.apply(data,arguments);};
+    });
+    
+    // Set properties
+    $.each(component.props, function(name, prop){
+        data[name] = (typeof props !== 'undefined' && props.hasOwnProperty(name) ? props[name] : prop);
+    });
+    
+    // Bind events
+    $.each(component.events, function(name, method){
+        $el.on(name, function() {return method.apply(data,arguments);});
+    });
+    
+    // Call the 'created' function if exists
+    if(component.hasOwnProperty('created')) component.created.call(data);
+    
+    $el.data('component', data);
+    
+    return $el;
+};/**
  * The constructor
  * 
  * @param {DOMElement} selection
@@ -156,6 +204,7 @@ Mivhak.prototype.init = function()
 {
     this.createTabs();
     this.createTopBar();
+    this.callMethod('setHeight', 150);
     this.callMethod('showTab',0); // Show first tab initially
 };
 
@@ -205,6 +254,13 @@ Mivhak.methods = {
     showTab: function(index) {
         this.tabs.showTab(index);
         this.topbar.activateNavTab(index);
+    },
+    setHeight: function(height) {
+        this.tabs.$el.height(height);
+        $.each(this.tabs.tabs, function(i,tab) {
+            $(tab.pre).height(height);
+            tab.editor.resize();
+        });
     },
     update: function(options) {
         // Update options here
@@ -282,36 +338,124 @@ var dropdownButtons = {
             console.log('about called');
         }
     }
-};Mivhak.component('tab-pane', {
-    template: '<div class="mivhak-tab-pane"></div>',
+};Mivhak.component('scrollbar', {
+    template: '<div class="mivhak-scrollbar"></div>',
+    props: {
+        orientation: null,
+        $inner: null,
+        $outer: null,
+        innerTop: 0,
+        padding: 10
+    },
+    created: function() {
+        var $this = this;
+        
+        this.$el.addClass('mivhak-'+this.orientation+'-scrollbar');
+        this.dragDealer();
+        if('v' === $this.orientation)
+            this.$inner.on('DOMMouseScroll mousewheel',function(e){$this.onScroll.call(this, e);});
+    },
+    methods: {
+        onScroll: function(e) {
+            e.preventDefault();
+            var didScroll;
+
+            if(e.originalEvent.wheelDelta > 0)
+                didScroll = this.doScroll('up',20);
+            else
+                didScroll = this.doScroll('down',20);
+            
+            if(0 !== didScroll) this.moveBar();
+        },
+        dragDealer: function(){
+            var $this = this,
+                lastPageY;
+
+            this.$el.on('mousedown.drag', function(e) {
+                lastPageY = e.pageY;
+                $this.$el.add(document.body).addClass('mivhak-scrollbar-grabbed');
+                $(document).on('mousemove.drag', drag).on('mouseup.drag', stop);
+                return false;
+            });
+
+            function drag(e){
+                var delta = e.pageY - lastPageY,
+                    diff = $this.$inner.height() - $this.$outer.height(),
+                    remaining,
+                    move;
+            
+                // Bail if the mouse hasn't moved
+                if(!delta) return;
+            
+                lastPageY = e.pageY;
+                remaining = delta > 0 ? diff - (-$this.innerTop) : (-$this.innerTop) ;
+                move = remaining > 0 ? Math.min(remaining, Math.abs(delta)) : 0;
+                
+                raf(function(){
+                    $this.innerTop += (delta > 0 ? -move : move);
+                    $this.$inner.css({top: $this.innerTop});
+                    $this.moveBar();
+                });
+            }
+
+            function stop() {
+                $this.$el.add(document.body).removeClass('mivhak-scrollbar-grabbed');
+                $(document).off("mousemove.drag mouseup.drag");
+            }
+        },
+        moveBar: function() {
+            this.$el.css({
+                top: (-this.innerTop) + this.padding + 'px'
+            });
+        },
+        setPosition: function() {
+            if('v' === this.orientation)
+                this.$el.css({height: this.getRatio() * 100 + '%', top: this.padding});
+            else this.$el.css({width: this.getRatio() * 100 + '%', left: this.padding});
+        },
+        getRatio: function() {
+            if('v' === this.orientation)
+                return (this.$outer.height() - this.padding*2 - 5) / this.$inner.outerHeight();
+            return (this.$outer.width() - this.padding*2 - 5) / this.$inner.outerWidth();
+        },
+        doScroll: function(dir, delta) {
+            var diff = this.$inner.height() - this.$outer.height(),
+                remaining,
+                didScroll;
+            
+            if('up' === dir) 
+            {
+                remaining = (-this.innerTop);
+                didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
+                this.innerTop += didScroll;
+            }
+            if('down' === dir) 
+            {
+                remaining = diff - (-this.innerTop);
+                didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
+                this.innerTop -= didScroll;
+            }
+            
+            this.$inner.css({top: this.innerTop});
+            return didScroll;
+        }
+    }
+});Mivhak.component('tab-pane', {
+    template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
         pre: null,
         editor: null,
+        padding: 10,
         mivhakInstance: null
     },
     created: function() {
-        
         this.setOptions();
+        this.setEditor();
         
-        this.pre.innerText = this.pre.innerText.trim(); // Remove redundant space from code
-        
-        this.editor = ace.edit(this.pre);
-        this.editor.setReadOnly(!this.mivhakInstance.options.editable);
-        this.editor.setTheme("ace/theme/"+this.getTheme());
-        this.editor.setShowPrintMargin(false);
-        this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
-        this.editor.getSession().setMode("ace/mode/"+this.lang);
-        this.editor.getSession().setUseWorker(false); // Disable syntax checking
-        this.editor.getSession().setUseWrapMode(this.mivhakInstance.state.lineWrap); // Set initial line wrapping
-        
-        this.editor.setOptions({
-            maxLines: Infinity,
-            firstLineNumber: 1,
-            highlightActiveLine: false,
-            fontSize: parseInt(14)
-        });
-        
-        this.$el = $(this.pre).wrap(this.$el).parent();
+        this.$el = $(this.pre).wrap(this.$el).parent().parent();
+        this.vscroll = Mivhak.render('scrollbar',{orientation: 'v',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
+        this.hscroll = Mivhak.render('scrollbar',{orientation: 'h',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
+        this.$el.append(this.vscroll.$el, this.hscroll.$el);
     },
     methods: {
         getTheme: function() {
@@ -327,9 +471,35 @@ var dropdownButtons = {
             this.$el.addClass('mivhak-tab-pane-active');
             this.editor.focus();
             this.editor.gotoLine(0); // Needed in order to get focus
+            
+            // Recalculate scrollbar positions based on the now visible element
+            this.vscroll.setPosition();
+            this.hscroll.setPosition();
         },
         hide: function() {
             this.$el.removeClass('mivhak-tab-pane-active');
+        },
+        setEditor: function() {
+            
+            // Remove redundant space from code
+            this.pre.innerText = this.pre.innerText.trim(); 
+            
+            // Set editor options
+            this.editor = ace.edit(this.pre);
+            this.editor.setReadOnly(!this.mivhakInstance.options.editable);
+            this.editor.setTheme("ace/theme/"+this.getTheme());
+            this.editor.setShowPrintMargin(false);
+            this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
+            this.editor.getSession().setMode("ace/mode/"+this.lang);
+            this.editor.getSession().setUseWorker(false); // Disable syntax checking
+            this.editor.getSession().setUseWrapMode(false); // Set initial line wrapping
+
+            this.editor.setOptions({
+                maxLines: Infinity,
+                firstLineNumber: 1,
+                highlightActiveLine: false,
+                fontSize: parseInt(14)
+            });
         }
     }
 });Mivhak.component('tabs', {

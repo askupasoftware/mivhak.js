@@ -40,6 +40,7 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/intro.js',
                         '<%= dirs.js %>/ace.config.js',
                         '<%= dirs.js %>/utility.js',
+                        '<%= dirs.js %>/jquery.template.js',
                         '<%= dirs.js %>/mivhak.js',
                         '<%= dirs.js %>/mivhak.defaults.js',
                         '<%= dirs.js %>/mivhak.methods.js',
@@ -89,6 +90,28 @@ module.exports = function(grunt) {
                 src: 'build/mivhak.js'
             },
         },
+        components: {
+            dist: function() {
+                var src = '<%= dirs.js %>/components/*.js',
+                    out = '<%= dirs.js %>/components/_compiled.js',
+                    fileList = grunt.file.expand(grunt.template.process(src)),
+                    contents = '';
+                
+                fileList.forEach(function(file) {
+                    var script = grunt.file.read(file),
+                        template = (function() {
+                            var src = file.replace('.js','.html');
+                            if(grunt.file.exists(src)) return grunt.file.read(src).replace("\n"," ");
+                            return '';
+                        });
+                        
+                    console.log(script,template);
+                    contents += "\n(function(template){\n" + script + "\n})(`"+template+"`);\n";
+                });
+                
+//                grunt.file.write(grunt.template.process(out),contents);
+            }
+        }
     });
 
     // Load grunt plugins
@@ -101,4 +124,5 @@ module.exports = function(grunt) {
     
     // Default task(s).
     grunt.registerTask('build', ['concat:js','concat:dev','strip_code','uglify','compass','concat:css','jshint']);
+    grunt.registerMultiTask("components", ["components"],function(){this.data.call();});
 };

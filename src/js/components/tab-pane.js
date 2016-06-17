@@ -1,33 +1,19 @@
 Mivhak.component('tab-pane', {
-    template: '<div class="mivhak-tab-pane"></div>',
+    template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
         pre: null,
         editor: null,
+        padding: 10,
         mivhakInstance: null
     },
     created: function() {
-        
         this.setOptions();
+        this.setEditor();
         
-        this.pre.innerText = this.pre.innerText.trim(); // Remove redundant space from code
-        
-        this.editor = ace.edit(this.pre);
-        this.editor.setReadOnly(!this.mivhakInstance.options.editable);
-        this.editor.setTheme("ace/theme/"+this.getTheme());
-        this.editor.setShowPrintMargin(false);
-        this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
-        this.editor.getSession().setMode("ace/mode/"+this.lang);
-        this.editor.getSession().setUseWorker(false); // Disable syntax checking
-        this.editor.getSession().setUseWrapMode(this.mivhakInstance.state.lineWrap); // Set initial line wrapping
-        
-        this.editor.setOptions({
-            maxLines: Infinity,
-            firstLineNumber: 1,
-            highlightActiveLine: false,
-            fontSize: parseInt(14)
-        });
-        
-        this.$el = $(this.pre).wrap(this.$el).parent();
+        this.$el = $(this.pre).wrap(this.$el).parent().parent();
+        this.vscroll = Mivhak.render('scrollbar',{orientation: 'v',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
+        this.hscroll = Mivhak.render('scrollbar',{orientation: 'h',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
+        this.$el.append(this.vscroll.$el, this.hscroll.$el);
     },
     methods: {
         getTheme: function() {
@@ -43,9 +29,35 @@ Mivhak.component('tab-pane', {
             this.$el.addClass('mivhak-tab-pane-active');
             this.editor.focus();
             this.editor.gotoLine(0); // Needed in order to get focus
+            
+            // Recalculate scrollbar positions based on the now visible element
+            this.vscroll.setPosition();
+            this.hscroll.setPosition();
         },
         hide: function() {
             this.$el.removeClass('mivhak-tab-pane-active');
+        },
+        setEditor: function() {
+            
+            // Remove redundant space from code
+            this.pre.innerText = this.pre.innerText.trim(); 
+            
+            // Set editor options
+            this.editor = ace.edit(this.pre);
+            this.editor.setReadOnly(!this.mivhakInstance.options.editable);
+            this.editor.setTheme("ace/theme/"+this.getTheme());
+            this.editor.setShowPrintMargin(false);
+            this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
+            this.editor.getSession().setMode("ace/mode/"+this.lang);
+            this.editor.getSession().setUseWorker(false); // Disable syntax checking
+            this.editor.getSession().setUseWrapMode(false); // Set initial line wrapping
+
+            this.editor.setOptions({
+                maxLines: Infinity,
+                firstLineNumber: 1,
+                highlightActiveLine: false,
+                fontSize: parseInt(14)
+            });
         }
     }
 });

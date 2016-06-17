@@ -15,6 +15,13 @@ Mivhak.methods = {
         this.tabs.showTab(index);
         this.topbar.activateNavTab(index);
     },
+    setHeight: function(height) {
+        this.tabs.$el.height(height);
+        $.each(this.tabs.tabs, function(i,tab) {
+            $(tab.pre).height(height);
+            tab.editor.resize();
+        });
+    },
     update: function(options) {
         // Update options here
     }

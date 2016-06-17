@@ -1,0 +1,30 @@
+@import '../variables';
+@import 'compass/css3';
+
+.mivhak-scrollbar {
+    position: absolute;
+    @include opacity(0.8);
+    @include transition(all 25ms linear);
+    
+    &:hover,
+    &.mivhak-scrollbar-grabbed {
+        cursor: pointer;
+        @include opacity(1);
+    }
+    
+    &.mivhak-h-scrollbar {
+        height: 5px;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    &.mivhak-v-scrollbar {
+        width: 5px;
+        right: 10px;
+    }
+}
+
+[miv-theme="light"] .mivhak-scrollbar {background-color: $theme-light-color;}
+[miv-theme="dark"] .mivhak-scrollbar {background-color: $theme-dark-color;}
+
+body.mivhak-scrollbar-grabbed {cursor: pointer;}

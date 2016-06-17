@@ -3,7 +3,8 @@
 
 .mivhak-tab-pane {
     display: none;
-    padding: 15px;
+    height: 100%;
+    overflow: auto;
     @include border-radius(5px);
     @include box-shadow(inset 0 2px 2px rgba(0, 0, 0, 0.05));
     
@@ -11,12 +12,32 @@
         display: block;
     }
     
-    pre {
-        background-color: transparent;
-        margin: 0;
+    .mivhak-tab-pane-inner {
+        overflow: hidden;
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        right: 15px;
+        bottom: 15px;
         
-        .ace_scroller {
-            box-shadow: none;
+        pre {
+            background-color: transparent;
+            position: absolute;
+            width: 100%;
+            margin: 0;
+            @include transition(all 25ms linear);
+
+            .ace_scroller {
+                box-shadow: none;
+            }
+            
+            .ace_scrollbar {
+                display: none;
+            }
+            
+            .ace_layer {
+                z-index: 0; // Prevent code from overlapping dropdown
+            }
         }
     }
 }

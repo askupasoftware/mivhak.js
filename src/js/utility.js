@@ -32,6 +32,13 @@ function readAttributes( el )
     return options;
 }
 
+// Request animation frame
+var raf = window.requestAnimationFrame || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function(cb) { return window.setTimeout(cb, 1000 / 60); };
+
 /* test-code */
 testapi.strToValue = strToValue;
 testapi.toCamelCase = toCamelCase;

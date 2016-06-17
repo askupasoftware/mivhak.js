@@ -104,6 +104,7 @@ Mivhak.prototype.init = function()
 {
     this.createTabs();
     this.createTopBar();
+    this.callMethod('setHeight', 150);
     this.callMethod('showTab',0); // Show first tab initially
 };
 
