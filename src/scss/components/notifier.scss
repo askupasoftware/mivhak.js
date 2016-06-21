@@ -6,7 +6,6 @@
     margin: 8px;
     text-align: center;
     padding: 10px;
-    background-color: white;
     z-index: 10;
     top: -10px;
     left: 0;
@@ -25,5 +24,5 @@
     }
 }
 
-[miv-theme="light"] .mivhak-notifier {color: $theme-light-color;}
-[miv-theme="dark"] .mivhak-notifier {color: $theme-dark-color;}
+[miv-theme="light"] .mivhak-notifier {background-color: $theme-light-dropdown-bg;color: $theme-light-color;}
+[miv-theme="dark"] .mivhak-notifier {background-color: $theme-dark-dropdown-bg;color: $theme-dark-color;}
