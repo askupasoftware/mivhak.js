@@ -13,6 +13,14 @@ Mivhak.methods = {
             tab.hscroll.onWidthChange();
         });
     },
+    copyCode: function() {
+        var editor = this.tabs.activeTab.editor;
+        editor.selection.selectAll();
+        editor.focus();
+        if(document.execCommand('copy'))
+            editor.selection.clearSelection();
+//        else this.notify('Hi there!');
+    },
     showTab: function(index) {
         this.tabs.showTab(index);
         this.topbar.activateNavTab(index);

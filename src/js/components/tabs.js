@@ -2,6 +2,7 @@ Mivhak.component('tabs', {
     template: '<div class="mivhak-tabs"></div>',
     props: {
         mivhakInstance: null,
+        activeTab: null,
         tabs: []
     },
     created: function() {
@@ -13,8 +14,12 @@ Mivhak.component('tabs', {
     },
     methods: {
         showTab: function(index){
+            var $this = this;
             $.each(this.tabs, function(i, tab){
-                if(index === i) tab.show();
+                if(index === i) {
+                    $this.activeTab = tab;
+                    tab.show();
+                }
                 else tab.hide();
             });
         }

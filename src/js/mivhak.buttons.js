@@ -11,8 +11,7 @@ Mivhak.buttons = {
     copy: {
         text: 'Copy',
         click: function(e) {
-            e.stopPropagation();
-            console.log('copy called');
+            this.callMethod('copyCode');
         }
     },
     collapse: {

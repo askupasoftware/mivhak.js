@@ -2,7 +2,7 @@
  * Package:      mivhak-js
  * URL:          http://products.askupasoftware.com/mivhak-js
  * Version:      1.0.0
- * Date:         2016-06-20
+ * Date:         2016-06-21
  * Dependencies: jQuery Mousewheel, clipboard.js
  * License:      GNU GENERAL PUBLIC LICENSE
  *
@@ -189,6 +189,36 @@ Mivhak.defaults = {
     height:         'auto',
     buttons:        ['wrap','copy','collapse','about'],
     ace:            {}
+};// Built-in buttons
+Mivhak.buttons = {
+    wrap: {
+        text: 'Wrap Lines', 
+        toggle: true, 
+        click: function(e) {
+            e.stopPropagation();
+            this.callMethod('toggleLineWrap');
+        }
+    },
+    copy: {
+        text: 'Copy',
+        click: function(e) {
+            this.callMethod('copyCode');
+        }
+    },
+    collapse: {
+        text: 'Colllapse',
+        click: function(e) {
+            e.stopPropagation();
+            console.log('Colllapse called');
+        }
+    },
+    about: {
+        text: 'About Mivhak',
+        click: function(e) {
+            e.stopPropagation();
+            console.log('about called');
+        }
+    }
 };/**
  * jQuery plugin's methods. 
  * In all methods, the 'this' keyword is pointing to the calling instance of Mivhak.
@@ -203,6 +233,14 @@ Mivhak.methods = {
             tab.vscroll.onHeightChange();
             tab.hscroll.onWidthChange();
         });
+    },
+    copyCode: function() {
+        var editor = this.tabs.activeTab.editor;
+        editor.selection.selectAll();
+        editor.focus();
+        if(document.execCommand('copy'))
+            editor.selection.clearSelection();
+//        else this.notify('Hi there!');
     },
     showTab: function(index) {
         this.tabs.showTab(index);
@@ -239,7 +277,7 @@ Mivhak.component = function(name, options)
     created: function() {
         var $this = this;
         $.each(this.items, function(i, item) {
-            if( typeof item === 'string') item = dropdownButtons[item];
+            if( typeof item === 'string') item = Mivhak.buttons[item];
             var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: function(e){item.click.call($this.mivhakInstance,e);}});
             if(item.toggle) 
             {
@@ -258,40 +296,7 @@ Mivhak.component = function(name, options)
             this.$el.toggleClass('mivhak-dropdown-visible');
         }
     }
-});
-
-// Built-in buttons
-var dropdownButtons = {
-    wrap: {
-        text: 'Wrap Lines', 
-        toggle: true, 
-        click: function(e) {
-            e.stopPropagation();
-            this.callMethod('toggleLineWrap');
-        }
-    },
-    copy: {
-        text: 'Copy',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('copy called');
-        }
-    },
-    collapse: {
-        text: 'Colllapse',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('Colllapse called');
-        }
-    },
-    about: {
-        text: 'About Mivhak',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('about called');
-        }
-    }
-};Mivhak.component('horizontal-scrollbar', {
+});Mivhak.component('horizontal-scrollbar', {
     template: '<div class="mivhak-scrollbar mivhak-h-scrollbar"><div class="mivhak-scrollbar-thumb"></div></div>',
     props: {
         editor: null,
@@ -492,6 +497,7 @@ var dropdownButtons = {
     template: '<div class="mivhak-tabs"></div>',
     props: {
         mivhakInstance: null,
+        activeTab: null,
         tabs: []
     },
     created: function() {
@@ -503,8 +509,12 @@ var dropdownButtons = {
     },
     methods: {
         showTab: function(index){
+            var $this = this;
             $.each(this.tabs, function(i, tab){
-                if(index === i) tab.show();
+                if(index === i) {
+                    $this.activeTab = tab;
+                    tab.show();
+                }
                 else tab.hide();
             });
         }
