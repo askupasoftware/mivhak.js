@@ -8,7 +8,7 @@ Mivhak.component('dropdown', {
     created: function() {
         var $this = this;
         $.each(this.items, function(i, item) {
-            if( typeof item === 'string') item = dropdownButtons[item];
+            if( typeof item === 'string') item = Mivhak.buttons[item];
             var button = $('<div>',{class: 'mivhak-dropdown-button', text: item.text, click: function(e){item.click.call($this.mivhakInstance,e);}});
             if(item.toggle) 
             {
@@ -28,36 +28,3 @@ Mivhak.component('dropdown', {
         }
     }
 });
-
-// Built-in buttons
-var dropdownButtons = {
-    wrap: {
-        text: 'Wrap Lines', 
-        toggle: true, 
-        click: function(e) {
-            e.stopPropagation();
-            this.callMethod('toggleLineWrap');
-        }
-    },
-    copy: {
-        text: 'Copy',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('copy called');
-        }
-    },
-    collapse: {
-        text: 'Colllapse',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('Colllapse called');
-        }
-    },
-    about: {
-        text: 'About Mivhak',
-        click: function(e) {
-            e.stopPropagation();
-            console.log('about called');
-        }
-    }
-};
