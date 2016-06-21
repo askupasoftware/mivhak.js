@@ -56,6 +56,11 @@ module.exports = function(grunt) {
                 files: {
                     '<%= dirs.build %>/mivhak-dev.js': ['<%= dirs.build %>/mivhak.js']
                 }
+            },
+            bundle: { // Create a version that includes all dependencies
+                files: {
+                    '<%= dirs.build %>/mivhak.bundle.min.js': ['<%= dirs.js %>/lib/*.js','<%= dirs.build %>/mivhak.js']
+                }
             }
         },
         compass: {
@@ -78,7 +83,8 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    '<%= dirs.build %>/mivhak.min.js': ['<%= dirs.build %>/mivhak.js']
+                    '<%= dirs.build %>/mivhak.min.js': ['<%= dirs.build %>/mivhak.js'],
+                    '<%= dirs.build %>/mivhak.bundle.min.js': ['<%= dirs.build %>/mivhak.bundle.min.js']
                 }
             }
         },
@@ -123,6 +129,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-strip-code');
     
     // Default task(s).
-    grunt.registerTask('build', ['concat:js','concat:dev','strip_code','uglify','compass','concat:css','jshint']);
+    grunt.registerTask('build', ['concat:js','concat:dev','concat:bundle','strip_code','uglify','compass','concat:css','jshint']);
     grunt.registerMultiTask("components", ["components"],function(){this.data.call();});
 };

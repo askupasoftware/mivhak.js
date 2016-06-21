@@ -1,9 +1,10 @@
 /**
- * Package: mivhak-js
- * URL:     http://products.askupasoftware.com/mivhak-js
- * Version: 1.0.0
- * Date:    2016-06-17
- * License: GNU GENERAL PUBLIC LICENSE
+ * Package:      mivhak-js
+ * URL:          http://products.askupasoftware.com/mivhak-js
+ * Version:      1.0.0
+ * Date:         2016-06-20
+ * Dependencies: jQuery Mousewheel, clipboard.js
+ * License:      GNU GENERAL PUBLIC LICENSE
  *
  * Developed by Askupa Software http://www.askupasoftware.com
  */
@@ -57,48 +58,7 @@ var raf = window.requestAnimationFrame ||
 testapi.strToValue = strToValue;
 testapi.toCamelCase = toCamelCase;
 testapi.readAttributes = readAttributes;
-/* end-test-code */$._components = [];
-
-$.component = function( name, config ) {
-   $._components[name] = config;
-};
-
-/**
- * 
- * @param {type} name
- * @param {type} props
- */
-$.render = function(name, props)
-{
-    var component = $.extend(true, {}, $._components[name]),
-        data      = {},
-        $el       = $(component.template);
-    
-    // Create the element from the template
-    data.$el = $el;
-    
-    // Create all methods
-    $.each(component.methods, function(name, method){
-        data[name] = function() {return method.apply(data,arguments);};
-    });
-    
-    // Set properties
-    $.each(component.props, function(name, prop){
-        data[name] = (typeof props !== 'undefined' && props.hasOwnProperty(name) ? props[name] : prop);
-    });
-    
-    // Bind events
-    $.each(component.events, function(name, method){
-        $el.on(name, function() {return method.apply(data,arguments);});
-    });
-    
-    // Call the 'created' function if exists
-    if(component.hasOwnProperty('created')) component.created.call(data);
-    
-    $el.data('component', data);
-    
-    return $el;
-};/**
+/* end-test-code *//**
  * The constructor
  * 
  * @param {DOMElement} selection
@@ -249,6 +209,8 @@ Mivhak.methods = {
         this.state.lineWrap = !this.state.lineWrap;
         $.each(this.tabs.tabs, function(i,tab) {
             tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
+            tab.vscroll.onHeightChange();
+            tab.hscroll.onWidthChange();
         });
     },
     showTab: function(index) {
@@ -338,63 +300,77 @@ var dropdownButtons = {
             console.log('about called');
         }
     }
-};Mivhak.component('scrollbar', {
-    template: '<div class="mivhak-scrollbar"></div>',
+};Mivhak.component('horizontal-scrollbar', {
+    template: '<div class="mivhak-scrollbar mivhak-h-scrollbar"><div class="mivhak-scrollbar-thumb"></div></div>',
     props: {
-        orientation: null,
+        editor: null,
         $inner: null,
         $outer: null,
-        innerTop: 0,
-        padding: 10
-    },
-    created: function() {
-        var $this = this;
-        
-        this.$el.addClass('mivhak-'+this.orientation+'-scrollbar');
-        this.dragDealer();
-        if('v' === $this.orientation)
-            this.$inner.on('DOMMouseScroll mousewheel',function(e){$this.onScroll.call(this, e);});
+        state: {
+            a: null,    // The total width of the editor
+            b: null,    // The width of the viewport, excluding padding
+            c: null,    // The width of the viewport, including padding
+            l: null     // The current left offset of the viewport
+        },
+        initialized: false
     },
     methods: {
-        onScroll: function(e) {
-            e.preventDefault();
-            var didScroll;
-
-            if(e.originalEvent.wheelDelta > 0)
-                didScroll = this.doScroll('up',20);
-            else
-                didScroll = this.doScroll('down',20);
+        initialize: function() {
             
-            if(0 !== didScroll) this.moveBar();
+            if(!this.initialized)
+            {
+                this.initialized = true;
+                
+                // Update state
+                this.state.a = this.$inner.width(); // Get the wrapper width initially since the editor with has not been calculated yet
+                this.state.b = this.$outer.parent().width();
+                this.state.c = this.$outer.width();
+                this.state.t = 0;
+                
+                this.dragDealer();
+                this.stateUpdated();
+            }
+        },
+        stateUpdated: function() {
+            if(this.getDifference() > 0)
+            {
+                var s = this.state;
+                this.$el.css({width: s.c*s.b/s.a + 'px', left: 0});
+                this.moveBar();
+            }
+            else this.$el.css({width: 0});
+        },
+        onWidthChange: function() {
+            var width = this.getEditorWidth(),
+                prevleft = this.state.l;
+            this.state.l *=  width/this.state.a;
+            this.doScroll('left',prevleft-this.state.l);
+            this.state.a = width;
+            this.stateUpdated();
         },
         dragDealer: function(){
             var $this = this,
-                lastPageY;
+                lastPageX;
 
             this.$el.on('mousedown.drag', function(e) {
-                lastPageY = e.pageY;
+                lastPageX = e.pageX;
                 $this.$el.add(document.body).addClass('mivhak-scrollbar-grabbed');
                 $(document).on('mousemove.drag', drag).on('mouseup.drag', stop);
                 return false;
             });
 
             function drag(e){
-                var delta = e.pageY - lastPageY,
-                    diff = $this.$inner.height() - $this.$outer.height(),
-                    remaining,
-                    move;
-            
+                var delta = e.pageX - lastPageX,
+                    didScroll;
+
                 // Bail if the mouse hasn't moved
                 if(!delta) return;
             
-                lastPageY = e.pageY;
-                remaining = delta > 0 ? diff - (-$this.innerTop) : (-$this.innerTop) ;
-                move = remaining > 0 ? Math.min(remaining, Math.abs(delta)) : 0;
+                lastPageX = e.pageX;
                 
                 raf(function(){
-                    $this.innerTop += (delta > 0 ? -move : move);
-                    $this.$inner.css({top: $this.innerTop});
-                    $this.moveBar();
+                    didScroll = $this.doScroll(delta > 0 ? 'right' : 'left', Math.abs(delta*$this.getEditorWidth()/$this.$outer.parent().width()));
+                    if(0 !== didScroll) $this.moveBar();
                 });
             }
 
@@ -405,39 +381,51 @@ var dropdownButtons = {
         },
         moveBar: function() {
             this.$el.css({
-                top: (-this.innerTop) + this.padding + 'px'
+                left:  (this.state.l/this.state.a)*this.state.b + 'px'
             });
         },
-        setPosition: function() {
-            if('v' === this.orientation)
-                this.$el.css({height: this.getRatio() * 100 + '%', top: this.padding});
-            else this.$el.css({width: this.getRatio() * 100 + '%', left: this.padding});
-        },
-        getRatio: function() {
-            if('v' === this.orientation)
-                return (this.$outer.height() - this.padding*2 - 5) / this.$inner.outerHeight();
-            return (this.$outer.width() - this.padding*2 - 5) / this.$inner.outerWidth();
-        },
+        
+        /**
+         * Scrolls the editor element in the direction given, provided that there 
+         * is remaining scroll space
+         * @param {string} dir
+         * @param {int} delta
+         */
         doScroll: function(dir, delta) {
-            var diff = this.$inner.height() - this.$outer.height(),
+            var s = this.state,
                 remaining,
                 didScroll;
             
-            if('up' === dir) 
+            if('left' === dir) 
             {
-                remaining = (-this.innerTop);
+                remaining = s.l;
                 didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
-                this.innerTop += didScroll;
+                s.l -= didScroll;
             }
-            if('down' === dir) 
+            if('right' === dir) 
             {
-                remaining = diff - (-this.innerTop);
+                remaining = this.getDifference() - s.l;
                 didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
-                this.innerTop -= didScroll;
+                s.l += didScroll;
             }
             
-            this.$inner.css({top: this.innerTop});
+            this.$inner.find('.ace_content').css({'margin-left': -s.l});
             return didScroll;
+        },
+        
+        /**
+         * Returns the difference between the containing div and the editor div
+         */
+        getDifference: function()
+        {
+            return this.state.a - this.state.c;
+        },
+        
+        /**
+         * Calculate the editor's width based on the number of lines
+         */
+        getEditorWidth: function() {
+            return this.$inner.find('.ace_content').width();
         }
     }
 });Mivhak.component('tab-pane', {
@@ -453,9 +441,7 @@ var dropdownButtons = {
         this.setEditor();
         
         this.$el = $(this.pre).wrap(this.$el).parent().parent();
-        this.vscroll = Mivhak.render('scrollbar',{orientation: 'v',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
-        this.hscroll = Mivhak.render('scrollbar',{orientation: 'h',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
-        this.$el.append(this.vscroll.$el, this.hscroll.$el);
+        this.setScrollbars();
     },
     methods: {
         getTheme: function() {
@@ -467,14 +453,23 @@ var dropdownButtons = {
                 $this[name] = value;
             });
         },
+        setScrollbars: function() {
+            var $inner = $(this.pre),
+                $outer = this.$el.find('.mivhak-tab-pane-inner');
+            
+            this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
+            this.hscroll = Mivhak.render('horizontal-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
+            
+            this.$el.append(this.vscroll.$el, this.hscroll.$el);
+        },
         show: function() {
             this.$el.addClass('mivhak-tab-pane-active');
             this.editor.focus();
             this.editor.gotoLine(0); // Needed in order to get focus
             
             // Recalculate scrollbar positions based on the now visible element
-            this.vscroll.setPosition();
-            this.hscroll.setPosition();
+            this.vscroll.initialize();
+            this.hscroll.initialize();
         },
         hide: function() {
             this.$el.removeClass('mivhak-tab-pane-active');
@@ -482,7 +477,7 @@ var dropdownButtons = {
         setEditor: function() {
             
             // Remove redundant space from code
-            this.pre.innerText = this.pre.innerText.trim(); 
+            this.pre.textContent = this.pre.textContent.trim(); 
             
             // Set editor options
             this.editor = ace.edit(this.pre);
@@ -492,7 +487,7 @@ var dropdownButtons = {
             this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
             this.editor.getSession().setMode("ace/mode/"+this.lang);
             this.editor.getSession().setUseWorker(false); // Disable syntax checking
-            this.editor.getSession().setUseWrapMode(false); // Set initial line wrapping
+            this.editor.getSession().setUseWrapMode(true); // Set initial line wrapping
 
             this.editor.setOptions({
                 maxLines: Infinity,
@@ -641,6 +636,155 @@ var dropdownButtons = {
             // Position the line
             this.line.width(button.$el.width());
             this.line.css({left:button.$el.position().left + (button.$el.outerWidth() - button.$el.width())/2});
+        }
+    }
+});Mivhak.component('vertical-scrollbar', {
+    template: '<div class="mivhak-scrollbar mivhak-v-scrollbar"><div class="mivhak-scrollbar-thumb"></div></div>',
+    props: {
+        editor: null,
+        $inner: null,
+        $outer: null,
+        state: {
+            a: null,    // The total height of the editor
+            b: null,    // The height of the viewport, excluding padding
+            c: null,    // The height of the viewport, including padding
+            t: null     // The current top offset of the viewport
+        },
+        initialized: false
+    },
+    methods: {
+        initialize: function() {
+            
+            if(!this.initialized)
+            {
+                this.initialized = true;
+                
+                // Update state
+                this.state.a = this.getEditorHeight();
+                this.state.b = this.$outer.parent().height();
+                this.state.c = this.$outer.height();
+                this.state.t = 0;
+                
+
+                if(this.getDifference() > 0)
+                {
+                    var $this = this;
+
+                    this.dragDealer();
+                    this.$inner.on('mousewheel', function(e){$this.onScroll.call(this, e);});
+
+                    this.stateUpdated();
+                }
+            }
+        },
+        stateUpdated: function() {
+            var s = this.state;
+            this.$el.css({height: s.c*s.b/s.a + 'px', top: 0});
+            this.moveBar();
+        },
+        onHeightChange: function() {
+            var height = this.getEditorHeight(),
+                prevTop = this.state.t;
+            this.state.t *=  height/this.state.a;
+            this.doScroll('up',prevTop-this.state.t);
+            this.state.a = height;
+            this.stateUpdated();
+        },
+        onScroll: function(e) {
+            var didScroll;
+            
+            if(e.deltaY > 0)
+                didScroll = this.doScroll('up',e.deltaY);
+            else
+                didScroll = this.doScroll('down',-e.deltaY);
+            
+            if(0 !== didScroll) {
+                this.moveBar();
+                e.preventDefault(); // Only prevent page scroll if the editor can be scrolled
+            }
+        },
+        dragDealer: function(){
+            var $this = this,
+                lastPageY;
+
+            this.$el.on('mousedown.drag', function(e) {
+                lastPageY = e.pageY;
+                $this.$el.add(document.body).addClass('mivhak-scrollbar-grabbed');
+                $(document).on('mousemove.drag', drag).on('mouseup.drag', stop);
+                return false;
+            });
+
+            function drag(e){
+                var delta = e.pageY - lastPageY,
+                    didScroll;
+            
+                // Bail if the mouse hasn't moved
+                if(!delta) return;
+            
+                lastPageY = e.pageY;
+                
+                raf(function(){
+                    didScroll = $this.doScroll(delta > 0 ? 'down' : 'up', Math.abs(delta*$this.getEditorHeight()/$this.$outer.parent().height()));
+                    if(0 !== didScroll) $this.moveBar();
+                });
+            }
+
+            function stop() {
+                $this.$el.add(document.body).removeClass('mivhak-scrollbar-grabbed');
+                $(document).off("mousemove.drag mouseup.drag");
+            }
+        },
+        moveBar: function() {
+            this.$el.css({
+                top:  (this.state.t/this.state.a)*this.state.b + 'px'
+            });
+        },
+        
+        /**
+         * Scrolls the editor element in the direction given, provided that there 
+         * is remaining scroll space
+         * @param {string} dir
+         * @param {int} delta
+         */
+        doScroll: function(dir, delta) {
+            var s = this.state,
+                remaining,
+                didScroll;
+            
+            if('up' === dir) 
+            {
+                remaining = s.t;
+                didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
+                s.t -= didScroll;
+            }
+            if('down' === dir) 
+            {
+                remaining = this.getDifference() - s.t;
+                didScroll = remaining > 0 ? Math.min(remaining,delta) : 0;
+                s.t += didScroll;
+            }
+            
+            this.$inner.css({top: -s.t});
+            return didScroll;
+        },
+        
+        /**
+         * Returns the difference between the containing div and the editor div
+         */
+        getDifference: function()
+        {
+            return this.state.a - this.state.c;
+        },
+        
+        /**
+         * Calculate the editor's height based on the number of lines
+         */
+        getEditorHeight: function() {
+            var height = 0;
+            this.$inner.find('.ace_text-layer').children().each(function(){
+                height += $(this).height();
+            });
+            return height;
         }
     }
 });$.fn.mivhak = function( methodOrOptions ) {

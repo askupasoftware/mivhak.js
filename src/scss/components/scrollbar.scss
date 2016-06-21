@@ -1,6 +1,9 @@
 @import '../variables';
 @import 'compass/css3';
 
+$width: 5px;
+$padding: 10px;
+
 .mivhak-scrollbar {
     position: absolute;
     @include opacity(0.8);
@@ -13,18 +16,28 @@
     }
     
     &.mivhak-h-scrollbar {
-        height: 5px;
-        left: 10px;
-        bottom: 10px;
+        height: $padding*2 + $width;
+        bottom: 0;
     }
 
     &.mivhak-v-scrollbar {
-        width: 5px;
-        right: 10px;
+        width: $padding*2 + $width;
+        right: 0;
     }
+    
+    .mivhak-scrollbar-thumb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+    
+    &.mivhak-v-scrollbar .mivhak-scrollbar-thumb {margin: $padding+$width $padding;}
+    &.mivhak-h-scrollbar .mivhak-scrollbar-thumb {margin: $padding $padding+$width;}
 }
 
-[miv-theme="light"] .mivhak-scrollbar {background-color: $theme-light-color;}
-[miv-theme="dark"] .mivhak-scrollbar {background-color: $theme-dark-color;}
+[miv-theme="light"] .mivhak-scrollbar-thumb {background-color: $theme-light-color;}
+[miv-theme="dark"] .mivhak-scrollbar-thumb {background-color: $theme-dark-color;}
 
 body.mivhak-scrollbar-grabbed {cursor: pointer;}

@@ -9,6 +9,8 @@ Mivhak.methods = {
         this.state.lineWrap = !this.state.lineWrap;
         $.each(this.tabs.tabs, function(i,tab) {
             tab.editor.getSession().setUseWrapMode($this.state.lineWrap);
+            tab.vscroll.onHeightChange();
+            tab.hscroll.onWidthChange();
         });
     },
     showTab: function(index) {

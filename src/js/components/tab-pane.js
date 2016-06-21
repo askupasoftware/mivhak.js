@@ -11,9 +11,7 @@ Mivhak.component('tab-pane', {
         this.setEditor();
         
         this.$el = $(this.pre).wrap(this.$el).parent().parent();
-        this.vscroll = Mivhak.render('scrollbar',{orientation: 'v',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
-        this.hscroll = Mivhak.render('scrollbar',{orientation: 'h',$inner: $(this.pre), $outer: this.$el.find('.mivhak-tab-pane-inner')});
-        this.$el.append(this.vscroll.$el, this.hscroll.$el);
+        this.setScrollbars();
     },
     methods: {
         getTheme: function() {
@@ -25,14 +23,23 @@ Mivhak.component('tab-pane', {
                 $this[name] = value;
             });
         },
+        setScrollbars: function() {
+            var $inner = $(this.pre),
+                $outer = this.$el.find('.mivhak-tab-pane-inner');
+            
+            this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
+            this.hscroll = Mivhak.render('horizontal-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
+            
+            this.$el.append(this.vscroll.$el, this.hscroll.$el);
+        },
         show: function() {
             this.$el.addClass('mivhak-tab-pane-active');
             this.editor.focus();
             this.editor.gotoLine(0); // Needed in order to get focus
             
             // Recalculate scrollbar positions based on the now visible element
-            this.vscroll.setPosition();
-            this.hscroll.setPosition();
+            this.vscroll.initialize();
+            this.hscroll.initialize();
         },
         hide: function() {
             this.$el.removeClass('mivhak-tab-pane-active');
@@ -40,7 +47,7 @@ Mivhak.component('tab-pane', {
         setEditor: function() {
             
             // Remove redundant space from code
-            this.pre.innerText = this.pre.innerText.trim(); 
+            this.pre.textContent = this.pre.textContent.trim(); 
             
             // Set editor options
             this.editor = ace.edit(this.pre);
@@ -50,7 +57,7 @@ Mivhak.component('tab-pane', {
             this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
             this.editor.getSession().setMode("ace/mode/"+this.lang);
             this.editor.getSession().setUseWorker(false); // Disable syntax checking
-            this.editor.getSession().setUseWrapMode(false); // Set initial line wrapping
+            this.editor.getSession().setUseWrapMode(true); // Set initial line wrapping
 
             this.editor.setOptions({
                 maxLines: Infinity,
