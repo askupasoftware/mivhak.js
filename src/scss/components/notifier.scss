@@ -1,0 +1,29 @@
+@import '../variables';
+@import 'compass/css3';
+
+.mivhak-notifier {
+    position: absolute;
+    margin: 8px;
+    text-align: center;
+    padding: 10px;
+    background-color: white;
+    z-index: 10;
+    top: -10px;
+    left: 0;
+    right: 0;
+    font-size: 0.9em;
+    visibility: hidden;
+    @include opacity(0);
+    @include box-shadow( 0 8px 20px -4px rgba(0,0,0,0.2),0 0 3px rgba(0,0,0,0.1) );
+    @include border-radius( 3px );
+    @include transition( all .2s ease-out );
+    
+    &.mivhak-visible {
+        visibility: visible;
+        top: 0;
+        @include opacity(1);
+    }
+}
+
+[miv-theme="light"] .mivhak-notifier {color: $theme-light-color;}
+[miv-theme="dark"] .mivhak-notifier {color: $theme-dark-color;}

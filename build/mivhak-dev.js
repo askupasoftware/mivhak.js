@@ -3,7 +3,7 @@
  * URL:          http://products.askupasoftware.com/mivhak-js
  * Version:      1.0.0
  * Date:         2016-06-21
- * Dependencies: jQuery Mousewheel, clipboard.js
+ * Dependencies: jQuery Mousewheel, Ace Editor
  * License:      GNU GENERAL PUBLIC LICENSE
  *
  * Developed by Askupa Software http://www.askupasoftware.com
@@ -162,8 +162,7 @@ Mivhak.render = function(name, props)
  */
 Mivhak.prototype.init = function() 
 {
-    this.createTabs();
-    this.createTopBar();
+    this.createUI();
     this.callMethod('setHeight', 150);
     this.callMethod('showTab',0); // Show first tab initially
 };
@@ -171,19 +170,15 @@ Mivhak.prototype.init = function()
 /**
  * 
  */
-Mivhak.prototype.createTabs = function() 
+Mivhak.prototype.createUI = function() 
 {
     this.tabs = Mivhak.render('tabs',{mivhakInstance: this});
-    this.$selection.prepend(this.tabs.$el);
-};
-
-/**
- * 
- */
-Mivhak.prototype.createTopBar = function() 
-{
     this.topbar = Mivhak.render('top-bar',{mivhakInstance: this});
+    this.notifier = Mivhak.render('notifier');
+    
+    this.$selection.prepend(this.tabs.$el);
     this.$selection.prepend(this.topbar.$el);
+    this.tabs.$el.prepend(this.notifier.$el);
 };
 
 /* test-code */
@@ -249,7 +244,7 @@ Mivhak.methods = {
         editor.focus();
         if(document.execCommand('copy'))
             editor.selection.clearSelection();
-//        else this.notify('Hi there!');
+        else this.notifier.notify('Press &#8984;+C to copy the code', 2000);
     },
     showTab: function(index) {
         this.tabs.showTab(index);
@@ -431,6 +426,26 @@ Mivhak.component = function(name, options)
          */
         getEditorWidth: function() {
             return this.$inner.find('.ace_content').width();
+        }
+    }
+});Mivhak.component('notifier', {
+    template: '<div class="mivhak-notifier"></div>',
+    methods: {
+        notify: function(html, timeout) {
+            if(!html) return;
+            clearTimeout(this.timeout);
+            this.$el.html(html);
+            this.$el.addClass('mivhak-visible');
+            if(typeof timeout !== 'undefined')
+            {
+                var $this = this;
+                this.timeout = setTimeout(function(){
+                    $this.hide();
+                },timeout);
+            }
+        },
+        hide: function() {
+            this.$el.removeClass('mivhak-visible');
         }
     }
 });Mivhak.component('tab-pane', {

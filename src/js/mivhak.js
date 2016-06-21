@@ -102,8 +102,7 @@ Mivhak.render = function(name, props)
  */
 Mivhak.prototype.init = function() 
 {
-    this.createTabs();
-    this.createTopBar();
+    this.createUI();
     this.callMethod('setHeight', 150);
     this.callMethod('showTab',0); // Show first tab initially
 };
@@ -111,19 +110,15 @@ Mivhak.prototype.init = function()
 /**
  * 
  */
-Mivhak.prototype.createTabs = function() 
+Mivhak.prototype.createUI = function() 
 {
     this.tabs = Mivhak.render('tabs',{mivhakInstance: this});
-    this.$selection.prepend(this.tabs.$el);
-};
-
-/**
- * 
- */
-Mivhak.prototype.createTopBar = function() 
-{
     this.topbar = Mivhak.render('top-bar',{mivhakInstance: this});
+    this.notifier = Mivhak.render('notifier');
+    
+    this.$selection.prepend(this.tabs.$el);
     this.$selection.prepend(this.topbar.$el);
+    this.tabs.$el.prepend(this.notifier.$el);
 };
 
 /* test-code */

@@ -19,7 +19,7 @@ Mivhak.methods = {
         editor.focus();
         if(document.execCommand('copy'))
             editor.selection.clearSelection();
-//        else this.notify('Hi there!');
+        else this.notifier.notify('Press &#8984;+C to copy the code', 2000);
     },
     showTab: function(index) {
         this.tabs.showTab(index);
