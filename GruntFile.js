@@ -43,6 +43,7 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/jquery.template.js',
                         '<%= dirs.js %>/mivhak.js',
                         '<%= dirs.js %>/mivhak.defaults.js',
+                        '<%= dirs.js %>/mivhak.buttons.js',
                         '<%= dirs.js %>/mivhak.methods.js',
                         '<%= dirs.js %>/mivhak.icons.js',
                         '<%= dirs.js %>/mivhak.component.js',
