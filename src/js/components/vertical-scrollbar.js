@@ -21,7 +21,10 @@ Mivhak.component('vertical-scrollbar', {
                 this.dragDealer();
                 var $this = this;
                 this.$inner.on('mousewheel', function(e){$this.onScroll.call(this, e);});
-                $(window).resize(function(){$this.refresh();});
+                $(window).resize(function(){
+                    if($this.mivhakInstance.state.lineWrap)
+                        $this.refresh();
+                });
             }
             // Refresh anytime initialize is called
             this.refresh();

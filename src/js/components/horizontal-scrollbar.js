@@ -20,7 +20,10 @@ Mivhak.component('horizontal-scrollbar', {
                 this.initialized = true;
                 this.dragDealer();
                 var $this = this;
-                $(window).resize(function(){$this.refresh();});
+                $(window).resize(function(){
+                    if(!$this.mivhakInstance.state.lineWrap)
+                        $this.refresh();
+                });
             }
             this.refresh();
         },
@@ -28,7 +31,7 @@ Mivhak.component('horizontal-scrollbar', {
             var oldState = $.extend({}, this.state);
             this.state.a = this.getEditorWidth();
             this.state.b = this.$outer.parent().width();
-            this.state.c = this.$outer.width();
+            this.state.c = this.state.b - this.mivhakInstance.options.padding*2;
             this.state.l *=  this.state.a/Math.max(oldState.a,1); // Math.max used to prevent division by zero
             return this.state.a !== oldState.a || this.state.b !== oldState.b;
         },
