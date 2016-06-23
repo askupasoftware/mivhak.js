@@ -5,10 +5,12 @@ Mivhak.component('horizontal-scrollbar', {
         $inner: null,
         $outer: null,
         mivhakInstance: null,
+        minWidth: 50,
         state: {
             a: 0,    // The total width of the editor
             b: 0,    // The width of the viewport, excluding padding
             c: 0,    // The width of the viewport, including padding
+            d: 0,    // The calculated width of the thumb
             l: 0     // The current left offset of the viewport
         },
         initialized: false
@@ -32,6 +34,7 @@ Mivhak.component('horizontal-scrollbar', {
             this.state.a = this.getEditorWidth();
             this.state.b = this.$outer.parent().width();
             this.state.c = this.state.b - this.mivhakInstance.options.padding*2;
+            this.state.d = Math.max(this.state.c*this.state.b/this.state.a,this.minWidth);
             this.state.l *=  this.state.a/Math.max(oldState.a,1); // Math.max used to prevent division by zero
             return this.state.a !== oldState.a || this.state.b !== oldState.b;
         },
@@ -43,8 +46,7 @@ Mivhak.component('horizontal-scrollbar', {
                     if($this.getDifference() > 0)
                     {
                         $this.doScroll('left',oldLeft-$this.state.l);
-                        var s = $this.state;
-                        $this.$el.css({width: s.c*s.b/s.a + 'px', left: 0});
+                        $this.$el.css({width: $this.state.d + 'px', left: 0});
                         $this.moveBar();
                     }
                     else $this.$el.css({width: 0});
@@ -84,7 +86,7 @@ Mivhak.component('horizontal-scrollbar', {
         },
         moveBar: function() {
             this.$el.css({
-                left:  (this.state.l/this.state.a)*this.state.b + 'px'
+                left:  (this.state.b-this.state.d)/(this.state.a-this.state.c)*this.state.l + 'px'
             });
         },
         

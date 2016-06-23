@@ -5,10 +5,12 @@ Mivhak.component('vertical-scrollbar', {
         $inner: null,
         $outer: null,
         mivhakInstance: null,
+        minHeight: 50,
         state: {
             a: 0,    // The total height of the editor
             b: 0,    // The height of the viewport, excluding padding
             c: 0,    // The height of the viewport, including padding
+            d: 0,    // The calculated thumb height
             t: 0     // The current top offset of the viewport
         },
         initialized: false
@@ -33,7 +35,8 @@ Mivhak.component('vertical-scrollbar', {
             var oldState = $.extend({}, this.state);
             this.state.a = this.getEditorHeight();
             this.state.b = this.mivhakInstance.state.height;
-            this.state.c = this.mivhakInstance.state.height-30;
+            this.state.c = this.mivhakInstance.state.height-this.mivhakInstance.options.padding*2;
+            this.state.d = Math.max(this.state.c*this.state.b/this.state.a,this.minHeight);
             this.state.t *=  this.state.a/Math.max(oldState.a,1); // Math.max used to prevent division by zero
             return this.state.a !== oldState.a || this.state.b !== oldState.b;
         },
@@ -45,8 +48,7 @@ Mivhak.component('vertical-scrollbar', {
                     if($this.getDifference() > 0)
                     {
                         $this.doScroll('up',oldTop-$this.state.t);
-                        var s = $this.state;
-                        $this.$el.css({height: s.c*s.b/s.a + 'px', top: 0});
+                        $this.$el.css({height: $this.state.d + 'px', top: 0});
                         $this.moveBar();
                     }
                     else $this.$el.css({height: 0});
@@ -99,7 +101,7 @@ Mivhak.component('vertical-scrollbar', {
         },
         moveBar: function() {
             this.$el.css({
-                top:  (this.state.t/this.state.a)*this.state.b + 'px'
+                top:  (this.state.b-this.state.d)/(this.state.a-this.state.c)*this.state.t + 'px'
             });
         },
         
