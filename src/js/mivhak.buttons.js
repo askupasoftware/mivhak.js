@@ -17,15 +17,14 @@ Mivhak.buttons = {
     collapse: {
         text: 'Colllapse',
         click: function(e) {
-            e.stopPropagation();
-            console.log('Colllapse called');
+            this.callMethod('collapse');
         }
     },
     about: {
         text: 'About Mivhak',
         click: function(e) {
-            e.stopPropagation();
-            console.log('about called');
+            var $this = this;
+            this.notifier.closableNotification('Mivhak.js v1.0.0',function(){this.callMethod('uncollapse');});
         }
     }
 };

@@ -43,11 +43,12 @@ Mivhak.component('vertical-scrollbar', {
             this.moveBar();
         },
         onHeightChange: function() {
-            var height = this.getEditorHeight(),
-                prevTop = this.state.t;
-            this.state.t *=  height/this.state.a;
-            this.doScroll('up',prevTop-this.state.t);
-            this.state.a = height;
+            var oldState = $.extend({}, this.state);
+            this.state.a = this.getEditorHeight();
+            this.state.b = this.$outer.parent().height();
+            this.state.c = this.$outer.height();
+            this.state.t *=  this.state.a/oldState.a;
+            this.doScroll('up',oldState.t-this.state.t);
             this.stateUpdated();
         },
         onScroll: function(e) {

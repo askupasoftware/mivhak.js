@@ -6,7 +6,7 @@
     margin: 8px;
     text-align: center;
     padding: 10px;
-    z-index: 10;
+    z-index: 1;
     top: -10px;
     left: 0;
     right: 0;
@@ -21,6 +21,10 @@
         visibility: visible;
         top: 0;
         @include opacity(1);
+    }
+    
+    &.mivhak-button {
+        cursor: pointer;
     }
 }
 

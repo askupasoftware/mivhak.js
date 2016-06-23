@@ -3,16 +3,19 @@
 
 .mivhak-top-bar {
     position: relative;
-    z-index: 1;
-
-    .mivhak-nav-tabs {
-        
-    }
+    z-index: 2; // Higher index than notifications
+    @include opacity(1);
+    @include transition(opacity .2s ease-out);
     
     .mivhak-controls {
         position: absolute;
         right: 0;
         top: 0;
+        @include transition(transform .2s ease-out);
+    }
+    
+    .mivhak-nav-tabs {
+        @include transition(transform .2s ease-out);
     }
     
     .mivhak-line {
@@ -48,6 +51,14 @@
         }
         
         &> svg {@include transition( all 0.3s ease-out );}
+    }
+}
+
+.mivhak-collapsed .mivhak-top-bar {
+    @include opacity(0);
+    
+    .mivhak-nav-tabs, .mivhak-controls {
+        @include transform(translateY(-10px));
     }
 }
 

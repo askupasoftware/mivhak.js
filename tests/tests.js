@@ -23,6 +23,24 @@ QUnit.test( "readAttributes", function( assert ) {
     });
 });
 
+QUnit.test( "average", function( assert ) {
+    assert.equal( testapi.average([2,4,6]), 4 );
+    assert.equal( testapi.average([1.5,7.5,3]),  4);
+    assert.equal( testapi.average(['1.5',7.5,3]),  4);
+});
+
+QUnit.test( "min", function( assert ) {
+    assert.equal( testapi.min([2,4,6]), 2 );
+    assert.equal( testapi.min([1.5,7.5,3]),  1.5);
+    assert.equal( testapi.min([-3,2,3]),  -3);
+});
+
+QUnit.test( "max", function( assert ) {
+    assert.equal( testapi.max([2,4,6]), 6 );
+    assert.equal( testapi.max([1.5,7.5,3]),  7.5);
+    assert.equal( testapi.max([-1.5,7.5,9]),  9);
+});
+
 QUnit.test( "setOptions", function( assert ) {
     var options = $.extend(true, {}, testapi.mivhak.defaults);
     options.lineNumbers = true;

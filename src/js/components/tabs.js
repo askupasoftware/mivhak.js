@@ -17,7 +17,7 @@ Mivhak.component('tabs', {
             var $this = this;
             $.each(this.tabs, function(i, tab){
                 if(index === i) {
-                    $this.activeTab = tab;
+                    $this.mivhakInstance.activeTab = tab;
                     tab.show();
                 }
                 else tab.hide();

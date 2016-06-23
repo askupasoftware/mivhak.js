@@ -9,6 +9,12 @@
         font-style: italic;
         text-align: center;
         margin: 5px;
+        @include transition( all .2s ease-out );
+    }
+    
+    &.mivhak-collapsed .mivhak-caption {
+        @include opacity(0);
+        @include transform(translateY(10px));
     }
     
     &[miv-theme="light"] .mivhak-caption {color: $theme-light-color}

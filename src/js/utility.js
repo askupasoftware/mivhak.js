@@ -32,6 +32,27 @@ function readAttributes( el )
     return options;
 }
 
+function average( arr )
+{
+    var i = arr.length, sum = 0;
+    while(i--) sum += parseFloat(arr[i]);
+    return sum/arr.length;
+}
+
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    return maxval;
+}
+
+function min( arr )
+{
+    var i = arr.length, minval = arr[--i];
+    while(i--) if(arr[i] < minval) minval = arr[i];
+    return minval;
+}
+
 // Request animation frame
 var raf = window.requestAnimationFrame || 
           window.webkitRequestAnimationFrame || 
@@ -43,4 +64,7 @@ var raf = window.requestAnimationFrame ||
 testapi.strToValue = strToValue;
 testapi.toCamelCase = toCamelCase;
 testapi.readAttributes = readAttributes;
+testapi.average = average;
+testapi.max = max;
+testapi.min = min;
 /* end-test-code */

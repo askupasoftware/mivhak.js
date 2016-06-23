@@ -14,12 +14,23 @@ Mivhak.methods = {
         });
     },
     copyCode: function() {
-        var editor = this.tabs.activeTab.editor;
+        var editor = this.activeTab.editor;
         editor.selection.selectAll();
         editor.focus();
         if(document.execCommand('copy'))
             editor.selection.clearSelection();
-        else this.notifier.notify('Press &#8984;+C to copy the code', 2000);
+        else this.notifier.timedNotification('Press &#8984;+C to copy the code', 2000);
+    },
+    collapse: function() {
+        var $this = this;
+        this.notifier.closableNotification('Show Code', function(){$this.callMethod('expand');});
+        this.$selection.addClass('mivhak-collapsed');
+        this.callMethod('setHeight',this.notifier.$el.outerHeight(true));
+    },
+    expand: function() {
+        this.notifier.hide(); // In case it's called by an external script
+        this.$selection.removeClass('mivhak-collapsed');
+        this.callMethod('setHeight',this.calculateHeight());
     },
     showTab: function(index) {
         this.tabs.showTab(index);
@@ -30,6 +41,7 @@ Mivhak.methods = {
         $.each(this.tabs.tabs, function(i,tab) {
             $(tab.pre).height(height);
             tab.editor.resize();
+            tab.vscroll.onHeightChange();
         });
     },
     update: function(options) {

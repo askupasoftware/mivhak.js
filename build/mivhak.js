@@ -2,7 +2,7 @@
  * Package:      mivhak-js
  * URL:          http://products.askupasoftware.com/mivhak-js
  * Version:      1.0.0
- * Date:         2016-06-21
+ * Date:         2016-06-22
  * Dependencies: jQuery Mousewheel, Ace Editor
  * License:      GNU GENERAL PUBLIC LICENSE
  *
@@ -44,6 +44,27 @@ function readAttributes( el )
     return options;
 }
 
+function average( arr )
+{
+    var i = arr.length, sum = 0;
+    while(i--) sum += parseFloat(arr[i]);
+    return sum/arr.length;
+}
+
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    return maxval;
+}
+
+function min( arr )
+{
+    var i = arr.length, minval = arr[--i];
+    while(i--) if(arr[i] < minval) minval = arr[i];
+    return minval;
+}
+
 // Request animation frame
 var raf = window.requestAnimationFrame || 
           window.webkitRequestAnimationFrame || 
@@ -79,7 +100,7 @@ Mivhak.methodExists = function( method )
 Mivhak.prototype.state = {
     lineWrap:   true,
     collapsed:  false,
-    activeTab:  0
+    activeTab:  null // Updated by tabs.showTab
 };
 
 /**
@@ -156,7 +177,7 @@ Mivhak.render = function(name, props)
 Mivhak.prototype.init = function() 
 {
     this.createUI();
-    this.callMethod('setHeight', 150);
+    this.callMethod('setHeight', this.calculateHeight());
     this.callMethod('showTab',0); // Show first tab initially
 };
 
@@ -174,6 +195,23 @@ Mivhak.prototype.createUI = function()
     this.tabs.$el.prepend(this.notifier.$el);
 };
 
+Mivhak.prototype.calculateHeight = function()
+{
+    var h = this.options.height,
+        heights = [],
+        padding = this.tabs.$el.css('padding-top') + this.tabs.$el.css('padding-bottom'),
+        i = this.tabs.tabs.length;
+console.log(padding);
+    while(i--)
+        heights.push(this.tabs.tabs[i].vscroll.getEditorHeight());
+
+    if('average' === h) return average(heights);
+    if('smallest' === h) return min(heights);
+    if('largest' === h) return max(heights);
+    if(!isNaN(h)) return parseInt(h);
+    
+};
+
 Mivhak.defaults = {
     runnable:       false,
     editable:       false,
@@ -181,7 +219,7 @@ Mivhak.defaults = {
     accentColor:    'currentColor',
     collapsed:      false,
     theme:          'light',
-    height:         'auto',
+    height:         'average',
     buttons:        ['wrap','copy','collapse','about'],
     ace:            {}
 };// Built-in buttons
@@ -203,15 +241,14 @@ Mivhak.buttons = {
     collapse: {
         text: 'Colllapse',
         click: function(e) {
-            e.stopPropagation();
-            console.log('Colllapse called');
+            this.callMethod('collapse');
         }
     },
     about: {
         text: 'About Mivhak',
         click: function(e) {
-            e.stopPropagation();
-            console.log('about called');
+            var $this = this;
+            this.notifier.closableNotification('Mivhak.js v1.0.0',function(){this.callMethod('uncollapse');});
         }
     }
 };/**
@@ -230,12 +267,23 @@ Mivhak.methods = {
         });
     },
     copyCode: function() {
-        var editor = this.tabs.activeTab.editor;
+        var editor = this.activeTab.editor;
         editor.selection.selectAll();
         editor.focus();
         if(document.execCommand('copy'))
             editor.selection.clearSelection();
-        else this.notifier.notify('Press &#8984;+C to copy the code', 2000);
+        else this.notifier.timedNotification('Press &#8984;+C to copy the code', 2000);
+    },
+    collapse: function() {
+        var $this = this;
+        this.notifier.closableNotification('Show Code', function(){$this.callMethod('expand');});
+        this.$selection.addClass('mivhak-collapsed');
+        this.callMethod('setHeight',this.notifier.$el.outerHeight(true));
+    },
+    expand: function() {
+        this.notifier.hide(); // In case it's called by an external script
+        this.$selection.removeClass('mivhak-collapsed');
+        this.callMethod('setHeight',this.calculateHeight());
     },
     showTab: function(index) {
         this.tabs.showTab(index);
@@ -246,6 +294,7 @@ Mivhak.methods = {
         $.each(this.tabs.tabs, function(i,tab) {
             $(tab.pre).height(height);
             tab.editor.resize();
+            tab.vscroll.onHeightChange();
         });
     },
     update: function(options) {
@@ -422,21 +471,33 @@ Mivhak.component = function(name, options)
 });Mivhak.component('notifier', {
     template: '<div class="mivhak-notifier"></div>',
     methods: {
-        notify: function(html, timeout) {
+        notification: function(html) {
             if(!html) return;
             clearTimeout(this.timeout);
+            this.$el.off('click');
             this.$el.html(html);
             this.$el.addClass('mivhak-visible');
-            if(typeof timeout !== 'undefined')
-            {
-                var $this = this;
-                this.timeout = setTimeout(function(){
-                    $this.hide();
-                },timeout);
-            }
+        },
+        timedNotification: function(html, timeout) {
+            var $this = this;
+            this.notification(html);
+            this.timeout = setTimeout(function(){
+                $this.hide();
+            },timeout);
+        },
+        closableNotification: function(html, onclick)
+        {
+            var $this = this;
+            this.notification(html);
+            this.$el.addClass('mivhak-button');
+            this.$el.click(function(e){
+                $this.hide();
+                if(typeof onclick !== 'undefined')
+                    onclick.call(null, e);
+            });
         },
         hide: function() {
-            this.$el.removeClass('mivhak-visible');
+            this.$el.removeClass('mivhak-visible mivhak-button');
         }
     }
 });Mivhak.component('tab-pane', {
@@ -527,7 +588,7 @@ Mivhak.component = function(name, options)
             var $this = this;
             $.each(this.tabs, function(i, tab){
                 if(index === i) {
-                    $this.activeTab = tab;
+                    $this.mivhakInstance.activeTab = tab;
                     tab.show();
                 }
                 else tab.hide();
@@ -699,11 +760,12 @@ Mivhak.component = function(name, options)
             this.moveBar();
         },
         onHeightChange: function() {
-            var height = this.getEditorHeight(),
-                prevTop = this.state.t;
-            this.state.t *=  height/this.state.a;
-            this.doScroll('up',prevTop-this.state.t);
-            this.state.a = height;
+            var oldState = $.extend({}, this.state);
+            this.state.a = this.getEditorHeight();
+            this.state.b = this.$outer.parent().height();
+            this.state.c = this.$outer.height();
+            this.state.t *=  this.state.a/oldState.a;
+            this.doScroll('up',oldState.t-this.state.t);
             this.stateUpdated();
         },
         onScroll: function(e) {

@@ -26,7 +26,7 @@ Mivhak.methodExists = function( method )
 Mivhak.prototype.state = {
     lineWrap:   true,
     collapsed:  false,
-    activeTab:  0
+    activeTab:  null // Updated by tabs.showTab
 };
 
 /**
@@ -103,7 +103,7 @@ Mivhak.render = function(name, props)
 Mivhak.prototype.init = function() 
 {
     this.createUI();
-    this.callMethod('setHeight', 150);
+    this.callMethod('setHeight', this.calculateHeight());
     this.callMethod('showTab',0); // Show first tab initially
 };
 
@@ -119,6 +119,23 @@ Mivhak.prototype.createUI = function()
     this.$selection.prepend(this.tabs.$el);
     this.$selection.prepend(this.topbar.$el);
     this.tabs.$el.prepend(this.notifier.$el);
+};
+
+Mivhak.prototype.calculateHeight = function()
+{
+    var h = this.options.height,
+        heights = [],
+        padding = this.tabs.$el.css('padding-top') + this.tabs.$el.css('padding-bottom'),
+        i = this.tabs.tabs.length;
+console.log(padding);
+    while(i--)
+        heights.push(this.tabs.tabs[i].vscroll.getEditorHeight());
+
+    if('average' === h) return average(heights);
+    if('smallest' === h) return min(heights);
+    if('largest' === h) return max(heights);
+    if(!isNaN(h)) return parseInt(h);
+    
 };
 
 /* test-code */

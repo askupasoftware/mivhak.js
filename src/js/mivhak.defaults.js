@@ -5,7 +5,7 @@ Mivhak.defaults = {
     accentColor:    'currentColor',
     collapsed:      false,
     theme:          'light',
-    height:         'auto',
+    height:         'average',
     buttons:        ['wrap','copy','collapse','about'],
     ace:            {}
 };
