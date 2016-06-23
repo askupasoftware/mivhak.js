@@ -24,7 +24,7 @@ Mivhak.buttons = {
         text: 'About Mivhak',
         click: function(e) {
             var $this = this;
-            this.notifier.closableNotification('Mivhak.js v1.0.0',function(){this.callMethod('uncollapse');});
+            this.notifier.closableNotification('Mivhak.js v1.0.0');
         }
     }
 };

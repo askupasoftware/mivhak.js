@@ -4,47 +4,49 @@ Mivhak.component('horizontal-scrollbar', {
         editor: null,
         $inner: null,
         $outer: null,
+        mivhakInstance: null,
         state: {
-            a: null,    // The total width of the editor
-            b: null,    // The width of the viewport, excluding padding
-            c: null,    // The width of the viewport, including padding
-            l: null     // The current left offset of the viewport
+            a: 0,    // The total width of the editor
+            b: 0,    // The width of the viewport, excluding padding
+            c: 0,    // The width of the viewport, including padding
+            l: 0     // The current left offset of the viewport
         },
         initialized: false
     },
     methods: {
         initialize: function() {
-            
             if(!this.initialized)
             {
                 this.initialized = true;
-                
-                // Update state
-                this.state.a = this.$inner.width(); // Get the wrapper width initially since the editor with has not been calculated yet
-                this.state.b = this.$outer.parent().width();
-                this.state.c = this.$outer.width();
-                this.state.t = 0;
-                
                 this.dragDealer();
-                this.stateUpdated();
+                var $this = this;
+                $(window).resize(function(){$this.refresh();});
             }
+            this.refresh();
         },
-        stateUpdated: function() {
-            if(this.getDifference() > 0)
-            {
-                var s = this.state;
-                this.$el.css({width: s.c*s.b/s.a + 'px', left: 0});
-                this.moveBar();
-            }
-            else this.$el.css({width: 0});
+        updateState: function() {
+            var oldState = $.extend({}, this.state);
+            this.state.a = this.getEditorWidth();
+            this.state.b = this.$outer.parent().width();
+            this.state.c = this.$outer.width();
+            this.state.l *=  this.state.a/Math.max(oldState.a,1); // Math.max used to prevent division by zero
+            return this.state.a !== oldState.a || this.state.b !== oldState.b;
         },
-        onWidthChange: function() {
-            var width = this.getEditorWidth(),
-                prevleft = this.state.l;
-            this.state.l *=  width/this.state.a;
-            this.doScroll('left',prevleft-this.state.l);
-            this.state.a = width;
-            this.stateUpdated();
+        refresh: function() {
+            var $this = this, oldLeft = this.state.l;
+            raf(function(){
+                if($this.updateState())
+                {
+                    if($this.getDifference() > 0)
+                    {
+                        $this.doScroll('left',oldLeft-$this.state.l);
+                        var s = $this.state;
+                        $this.$el.css({width: s.c*s.b/s.a + 'px', left: 0});
+                        $this.moveBar();
+                    }
+                    else $this.$el.css({width: 0});
+                }
+            });
         },
         dragDealer: function(){
             var $this = this,

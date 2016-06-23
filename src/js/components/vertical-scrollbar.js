@@ -4,52 +4,51 @@ Mivhak.component('vertical-scrollbar', {
         editor: null,
         $inner: null,
         $outer: null,
+        mivhakInstance: null,
         state: {
-            a: null,    // The total height of the editor
-            b: null,    // The height of the viewport, excluding padding
-            c: null,    // The height of the viewport, including padding
-            t: null     // The current top offset of the viewport
+            a: 0,    // The total height of the editor
+            b: 0,    // The height of the viewport, excluding padding
+            c: 0,    // The height of the viewport, including padding
+            t: 0     // The current top offset of the viewport
         },
         initialized: false
     },
     methods: {
         initialize: function() {
-            
             if(!this.initialized)
             {
                 this.initialized = true;
-                
-                // Update state
-                this.state.a = this.getEditorHeight();
-                this.state.b = this.$outer.parent().height();
-                this.state.c = this.$outer.height();
-                this.state.t = 0;
-                
-
-                if(this.getDifference() > 0)
-                {
-                    var $this = this;
-
-                    this.dragDealer();
-                    this.$inner.on('mousewheel', function(e){$this.onScroll.call(this, e);});
-
-                    this.stateUpdated();
-                }
+                this.dragDealer();
+                var $this = this;
+                this.$inner.on('mousewheel', function(e){$this.onScroll.call(this, e);});
+                $(window).resize(function(){$this.refresh();});
             }
+            // Refresh anytime initialize is called
+            this.refresh();
         },
-        stateUpdated: function() {
-            var s = this.state;
-            this.$el.css({height: s.c*s.b/s.a + 'px', top: 0});
-            this.moveBar();
-        },
-        onHeightChange: function() {
+        updateState: function() {
             var oldState = $.extend({}, this.state);
             this.state.a = this.getEditorHeight();
-            this.state.b = this.$outer.parent().height();
-            this.state.c = this.$outer.height();
-            this.state.t *=  this.state.a/oldState.a;
-            this.doScroll('up',oldState.t-this.state.t);
-            this.stateUpdated();
+            this.state.b = this.mivhakInstance.state.height;
+            this.state.c = this.mivhakInstance.state.height-30;
+            this.state.t *=  this.state.a/Math.max(oldState.a,1); // Math.max used to prevent division by zero
+            return this.state.a !== oldState.a || this.state.b !== oldState.b;
+        },
+        refresh: function() {
+            var $this = this, oldTop = this.state.t;
+            raf(function(){
+                if($this.updateState())
+                {
+                    if($this.getDifference() > 0)
+                    {
+                        $this.doScroll('up',oldTop-$this.state.t);
+                        var s = $this.state;
+                        $this.$el.css({height: s.c*s.b/s.a + 'px', top: 0});
+                        $this.moveBar();
+                    }
+                    else $this.$el.css({height: 0});
+                }
+            });
         },
         onScroll: function(e) {
             var didScroll;

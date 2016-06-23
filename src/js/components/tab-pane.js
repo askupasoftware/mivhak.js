@@ -27,8 +27,8 @@ Mivhak.component('tab-pane', {
             var $inner = $(this.pre),
                 $outer = this.$el.find('.mivhak-tab-pane-inner');
             
-            this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
-            this.hscroll = Mivhak.render('horizontal-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer});
+            this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer, mivhakInstance: this.mivhakInstance});
+            this.hscroll = Mivhak.render('horizontal-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer, mivhakInstance: this.mivhakInstance});
             
             this.$el.append(this.vscroll.$el, this.hscroll.$el);
         },

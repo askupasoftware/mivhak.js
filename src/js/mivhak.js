@@ -5,7 +5,7 @@
  * @param {object} options
  */
 function Mivhak( selection, options )
-{
+{   
     this.$selection = $( selection );
     this.setOptions( options );
     this.init();
@@ -18,49 +18,6 @@ function Mivhak( selection, options )
 Mivhak.methodExists = function( method )
 {
     return typeof method === 'string' && Mivhak.methods[method];
-};
-
-/**
- * 
- */
-Mivhak.prototype.state = {
-    lineWrap:   true,
-    collapsed:  false,
-    activeTab:  null // Updated by tabs.showTab
-};
-
-/**
- * Set or update this instance's options.
- * @param {object} options
- */
-Mivhak.prototype.setOptions = function( options ) 
-{
-    // If options were already set, update them
-    if( typeof this.options !== 'undefined' )
-    {
-        this.options = $.extend(true, {}, this.options, options, readAttributes(this.$selection[0]));
-    }
-    // Otherwise, merge them with the defaults
-    else
-    {
-        this.options = $.extend(true, {}, Mivhak.defaults, options, readAttributes(this.$selection[0]));
-    }
-};
-
-/**
- * 
- * @param {type} methodName
- */
-Mivhak.prototype.callMethod = function( methodName )
-{
-    if(Mivhak.methodExists(methodName))
-    {
-        // Call the method with the original arguments, removing the method's name from the list
-        var args = [];
-        Array.prototype.push.apply( args, arguments );
-        args.shift();
-        Mivhak.methods[methodName].apply(this, args);
-    }
 };
 
 /**
@@ -102,9 +59,54 @@ Mivhak.render = function(name, props)
  */
 Mivhak.prototype.init = function() 
 {
+    this.initState();
     this.createUI();
-    this.callMethod('setHeight', this.calculateHeight());
     this.callMethod('showTab',0); // Show first tab initially
+    this.callMethod('setHeight', this.calculateHeight());
+};
+
+Mivhak.prototype.initState = function() 
+{
+    this.state = {
+        lineWrap:   true,
+        collapsed:  false,
+        height:     0,
+        activeTab:  null // Updated by tabs.showTab
+    };
+};
+
+/**
+ * Set or update this instance's options.
+ * @param {object} options
+ */
+Mivhak.prototype.setOptions = function( options ) 
+{
+    // If options were already set, update them
+    if( typeof this.options !== 'undefined' )
+    {
+        this.options = $.extend(true, {}, this.options, options, readAttributes(this.$selection[0]));
+    }
+    // Otherwise, merge them with the defaults
+    else
+    {
+        this.options = $.extend(true, {}, Mivhak.defaults, options, readAttributes(this.$selection[0]));
+    }
+};
+
+/**
+ * 
+ * @param {type} methodName
+ */
+Mivhak.prototype.callMethod = function( methodName )
+{
+    if(Mivhak.methodExists(methodName))
+    {
+        // Call the method with the original arguments, removing the method's name from the list
+        var args = [];
+        Array.prototype.push.apply( args, arguments );
+        args.shift();
+        Mivhak.methods[methodName].apply(this, args);
+    }
 };
 
 /**
