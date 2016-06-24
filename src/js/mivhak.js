@@ -62,7 +62,8 @@ Mivhak.prototype.init = function()
     this.initState();
     this.createUI();
     this.callMethod('showTab',0); // Show first tab initially
-    this.callMethod('setHeight', this.calculateHeight());
+    this.callMethod('setHeight', this.options.height);
+    if(this.options.collapsed) this.callMethod('collapse');
 };
 
 Mivhak.prototype.initState = function() 
@@ -121,23 +122,27 @@ Mivhak.prototype.createUI = function()
     this.$selection.prepend(this.tabs.$el);
     this.$selection.prepend(this.topbar.$el);
     this.tabs.$el.prepend(this.notifier.$el);
+    
+    if(this.options.caption) {
+        this.caption = Mivhak.render('caption',{text: this.options.caption});
+        this.$selection.append(this.caption.$el);
+    }
 };
 
-Mivhak.prototype.calculateHeight = function()
+Mivhak.prototype.calculateHeight = function(h)
 {
-    var h = this.options.height,
-        heights = [],
-        padding = this.tabs.$el.css('padding-top') + this.tabs.$el.css('padding-bottom'),
+    var heights = [],
+        padding = this.options.padding*2,
         i = this.tabs.tabs.length;
-console.log(padding);
+
     while(i--)
-        heights.push(this.tabs.tabs[i].vscroll.getEditorHeight());
+        heights.push(this.tabs.tabs[i].vscroll.getEditorHeight()+padding);
 
     if('average' === h) return average(heights);
     if('smallest' === h) return min(heights);
     if('largest' === h) return max(heights);
+    if('auto' === h) return this.activeTab.vscroll.getEditorHeight()+padding;
     if(!isNaN(h)) return parseInt(h);
-    
 };
 
 /* test-code */

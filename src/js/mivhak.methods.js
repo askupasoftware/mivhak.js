@@ -17,8 +17,10 @@ Mivhak.methods = {
         var editor = this.activeTab.editor;
         editor.selection.selectAll();
         editor.focus();
-        if(document.execCommand('copy'))
+        if(document.execCommand('copy')) {
             editor.selection.clearSelection();
+            this.notifier.timedNotification('Copied to clipboard!', 2000);
+        }
         else this.notifier.timedNotification('Press &#8984;+C to copy the code', 2000);
     },
     collapse: function() {
@@ -32,20 +34,23 @@ Mivhak.methods = {
         this.state.collapsed = false;
         this.notifier.hide(); // In case it's called by an external script
         this.$selection.removeClass('mivhak-collapsed');
-        this.callMethod('setHeight',this.calculateHeight());
+        this.callMethod('setHeight',this.options.height);
     },
     showTab: function(index) {
         this.tabs.showTab(index);
         this.topbar.activateNavTab(index);
     },
     setHeight: function(height) {
-        this.state.height = height;
-        this.tabs.$el.height(height);
-        $.each(this.tabs.tabs, function(i,tab) {
-            $(tab.pre).height(height);
-            tab.editor.resize();
-            tab.vscroll.refresh();
-            tab.hscroll.refresh();
+        var $this = this;
+        raf(function(){
+            $this.state.height = $this.calculateHeight(height);
+            $this.tabs.$el.height($this.state.height);console.log($this.state.height);
+            $.each($this.tabs.tabs, function(i,tab) {
+                $(tab.pre).height(height);
+                tab.editor.resize();
+                tab.vscroll.refresh();
+                tab.hscroll.refresh();
+            });
         });
     },
     update: function(options) {

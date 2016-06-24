@@ -51,7 +51,11 @@ Mivhak.component('vertical-scrollbar', {
                         $this.$el.css({height: $this.state.d + 'px', top: 0});
                         $this.moveBar();
                     }
-                    else $this.$el.css({height: 0});
+                    else 
+                    {
+                        $this.doScroll('up',$this.state.t);
+                        $this.$el.css({height: 0});
+                    }
                 }
             });
         },

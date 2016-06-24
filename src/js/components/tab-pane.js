@@ -11,6 +11,7 @@ Mivhak.component('tab-pane', {
         this.setEditor();
         
         this.$el = $(this.pre).wrap(this.$el).parent().parent();
+        this.$el.find('.mivhak-tab-pane-inner').css({margin: this.mivhakInstance.options.padding});
         this.setScrollbars();
     },
     methods: {

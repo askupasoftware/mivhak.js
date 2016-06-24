@@ -2,7 +2,11 @@
 @import 'compass/css3';
 
 .mivhak-top-bar {
-    position: relative;
+    position: absolute;
+    top: -36px;
+    left: 0;
+    right: 0;
+    height: 36px;
     z-index: 2; // Higher index than notifications
     @include opacity(1);
     @include transition(opacity .2s ease-out);
@@ -55,6 +59,7 @@
 }
 
 .mivhak-collapsed .mivhak-top-bar {
+    visibility: hidden;
     @include opacity(0);
     
     .mivhak-nav-tabs, .mivhak-controls {

@@ -49,7 +49,11 @@ Mivhak.component('horizontal-scrollbar', {
                         $this.$el.css({width: $this.state.d + 'px', left: 0});
                         $this.moveBar();
                     }
-                    else $this.$el.css({width: 0});
+                    else 
+                    {
+                        $this.doScroll('left',$this.state.l);
+                        $this.$el.css({width: 0});
+                    }
                 }
             });
         },
