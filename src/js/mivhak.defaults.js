@@ -11,3 +11,10 @@ Mivhak.defaults = {
     buttons:        ['wrap','copy','collapse','about'],
     ace:            {}
 };
+
+Mivhak.sourceDefaults = {
+    lang:           null,
+    runAs:          false,
+    source:         false,
+    visible:        true
+};

@@ -2,12 +2,12 @@ Mivhak.component('tab-pane', {
     template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
         pre: null,
+        lang: null,
         editor: null,
         padding: 10,
         mivhakInstance: null
     },
     created: function() {
-        this.setOptions();
         this.setEditor();
         
         this.$el = $(this.pre).wrap(this.$el).parent().parent();
@@ -17,12 +17,6 @@ Mivhak.component('tab-pane', {
     methods: {
         getTheme: function() {
             return this.mivhakInstance.options.theme === 'light' ? 'clouds' : 'ambiance';
-        },
-        setOptions: function() {
-            var $this = this;
-            $.each(readAttributes(this.pre), function(name, value){
-                $this[name] = value;
-            });
         },
         setScrollbars: function() {
             var $inner = $(this.pre),

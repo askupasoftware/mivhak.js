@@ -25,9 +25,9 @@ Mivhak.component('top-bar', {
         },
         createTabNav: function() {
             var $this = this;
-            $.each(this.mivhakInstance.tabs.tabs, function(i,tab){
+            $.each(this.mivhakInstance.state.sources, function(i,source){
                 var button = Mivhak.render('top-bar-button',{
-                    text: tab.lang,
+                    text: source.lang,
                     onClick: function() {
                         $this.mivhakInstance.callMethod('showTab',i);
                     }

@@ -63,9 +63,9 @@ Mivhak.component('vertical-scrollbar', {
             var didScroll;
             
             if(e.deltaY > 0)
-                didScroll = this.doScroll('up',e.deltaY);
+                didScroll = this.doScroll('up',e.deltaY*e.deltaFactor);
             else
-                didScroll = this.doScroll('down',-e.deltaY);
+                didScroll = this.doScroll('down',-e.deltaY*e.deltaFactor);
             
             if(0 !== didScroll) {
                 this.moveBar();
