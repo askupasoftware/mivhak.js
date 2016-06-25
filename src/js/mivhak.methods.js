@@ -44,7 +44,7 @@ Mivhak.methods = {
         var $this = this;
         raf(function(){
             $this.state.height = $this.calculateHeight(height);
-            $this.tabs.$el.height($this.state.height);console.log($this.state.height);
+            $this.tabs.$el.height($this.state.height);
             $.each($this.tabs.tabs, function(i,tab) {
                 $(tab.pre).height(height);
                 tab.editor.resize();

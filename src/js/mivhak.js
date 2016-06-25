@@ -95,6 +95,8 @@ Mivhak.prototype.createUI = function()
         this.caption = Mivhak.render('caption',{text: this.options.caption});
         this.$selection.append(this.caption.$el);
     }
+    
+    if(this.options.runnable) this.createLivePreview();
 };
 
 Mivhak.prototype.calculateHeight = function(h)
@@ -117,8 +119,14 @@ Mivhak.prototype.parseSources = function()
 {
     var $this = this;
     this.$selection.find('pre').each(function(){
-        $this.state.sources.push($.extend({},Mivhak.sourceDefaults,{pre:this},readAttributes(this)));
+        $this.state.sources.push($.extend({},Mivhak.sourceDefaults,{pre:this, content: this.textContent},readAttributes(this)));
     });
+};
+
+Mivhak.prototype.createLivePreview = function()
+{
+    this.preview = Mivhak.render('live-preview',{sources: this.state.sources});
+    this.tabs.$el.append(this.preview.$el);
 };
 
 /* test-code */

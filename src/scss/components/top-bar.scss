@@ -26,7 +26,12 @@
         height: 3px;
         position: absolute;
         bottom: -3px;
+        @include transform( scaleX(0) );
         @include transition( all .2s ease-out );
+        
+        &.mivhak-visible {
+            @include transform( scaleX(1) );
+        }
     }
     
     .mivhak-top-bar-button {

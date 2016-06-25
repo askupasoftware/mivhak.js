@@ -4,5 +4,7 @@
 .mivhak-tabs {
     position: relative;
     @include transition( height .2s ease-out );
+    
+    [miv-visible="false"] {display:none}
 }
 

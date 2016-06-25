@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- scripts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
-        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-        <script src="../src/js/lib/jquery.mousewheel.js"></script>
-        <script src="../build/mivhak-dev.js"></script>
-        
         <!-- styles -->
         <link href="../build/mivhak.min.css" rel="stylesheet" />
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
@@ -22,56 +16,130 @@
         <div class="light-bg">
             <div class="box">
                 <h2>Light Theme</h2>
-                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="150">
-                    <pre miv-lang="javascript" miv-run-as="script">
-function add(x, y) {
-    var resultString = "Hello, ACE! The result of your math is: ";
-    var result = x + y;
-    return resultString + result;
+                <h3>Simple Code Highlighting</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="mivhak" miv-theme="light" miv-height="auto">
+                    <pre miv-lang="javascript">
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    return maxval;
 }
-
-// Here is a very long comment to test the line wrapping button --------------------------------------------->
-
-var addResult = add(3, 2);
-console.log(addResult);
                     </pre>
-                    <pre miv-lang="html" miv-run-as="markup">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;&lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello World&lt;/h1&gt;
-        &lt;p&gt;Hi&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-&lt;html&gt;
-    &lt;head&gt;&lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello World&lt;/h1&gt;
-        &lt;p&gt;Hi&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-&lt;html&gt;
-    &lt;head&gt;&lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Hello World&lt;/h1&gt;
-        &lt;p&gt;Hi&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
+                </div>
+                
+                <h3>Collapsed Code</h3>
+                <div class="mivhak" miv-theme="light" miv-height="auto" miv-collapsed="true">
+                    <pre miv-lang="javascript">
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    return maxval;
+}
+                    </pre>
+                </div>
+                
+                <h3>Live Code Previewing</h3>
+                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="average" miv-caption="Caption Text Here...">
+                    <pre miv-visible="false" miv-run-as="script" miv-source="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></pre>
+                    <pre miv-visible="false" miv-run-as="style" miv-source="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"></pre>
+                    <pre miv-lang="javascript" miv-run-as="script">
+var paint = false,
+    counter = 0;console.log($('#container').length);
+$('#container')
+  .mousedown(function(){
+    paint = true;
+  })
+  .mouseup(function(){
+    paint = false;
+  })
+  .mousemove(function(e){
+    if(paint){
+    W = $('#container').width();
+    H = $('#container').height();
+    x = e.pageX;
+    y = e.pageY;
+    X = Math.floor(x/W * 100);
+    Y = Math.floor(y/H * 100);
+    r = Math.floor(Math.random() * 90);
+    counter = (counter < 360) ? counter+1 : 0;
+    h = counter;
+    //h = Math.floor((X+Y) * 360 / 200);
+    $('#container').append('<div class="postit" style="top:'+y+'px;left:'+x+'px;background:hsla('+h+',100%,50%,0.1);transform:rotate('+r+'deg)"></div>');
+    }
+  });
+$('#reset').click(function(){
+  $("#container").empty();
+});
+                    </pre>
+                    <pre miv-lang="html" miv-run-as="markup">
+&lt;link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700,100|Montserrat:400,700|Catamaran:400,100' rel='stylesheet' type='text/css'>
+&lt;h1>CLICK & DRAG&lt;/h1>
+&lt;div id="container">&lt;/div>
+&lt;div id="reset">RESET&lt;/div>
                     </pre>
                     <pre miv-lang="css" miv-run-as="style">
-body {background: blue}
-body {background: blue}
-body {background: blue}
-body {background: blue}
-body {background: blue}
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+}
+body {
+  perspective: 2000px;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background: radial-gradient(circle at 50% 50%, #fff 0%, #7EC0EE 200%);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: 'Roboto';
+  font-weight: 300
+}
+h1{
+  font-familt:'Catamaran';
+  font-weight:100;
+  text-align:center
+}
+#container{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+.postit{
+  position:absolute;
+  width:100px;
+  height:100px;
+  border-radius:5%;
+  transform:rotate(0deg);
+  margin:-50px 0 0 -50px;
+}
+#reset{
+  position:absolute;
+  bottom:3px;right:3px;
+  height:30px;
+  line-height:30px;
+  padding:0 10px;
+  color:#fff;
+  background:rgba(0,0,0,0.5);
+  z-index:100;
+  cursor:pointer;
+}
                     </pre>
-                    <div class="mivhak-caption">Caption Text Here....</div>
                 </div>
             </div>
         </div>
         <div class="dark-bg">
             <div class="box">
                 <h2>Dark Theme</h2>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
                 <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="dark">
                     <pre miv-lang="html" miv-run-as="markup">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -99,6 +167,12 @@ console.log(addResult);
                 </div>
             </div>
         </div>
+        
+        <!-- scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="../src/js/lib/jquery.mousewheel.js"></script>
+        <script src="../build/mivhak-dev.js"></script>
         <script>$('.mivhak').mivhak();</script>
     </body>
 </html>
