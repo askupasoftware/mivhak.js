@@ -45,9 +45,16 @@ function max( arr )
                 <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="average" miv-caption="Caption Text Here...">
                     <pre miv-visible="false" miv-run-as="script" miv-source="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></pre>
                     <pre miv-visible="false" miv-run-as="style" miv-source="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"></pre>
+                    <pre miv-lang="html" miv-run-as="markup">
+&lt;link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700,100|Montserrat:400,700|Catamaran:400,100' rel='stylesheet' type='text/css'>
+&lt;h1>CLICK & DRAG&lt;/h1>
+&lt;div id="container">&lt;/div>
+&lt;div id="reset">RESET&lt;/div>
+                    </pre>
                     <pre miv-lang="javascript" miv-run-as="script">
 var paint = false,
-    counter = 0;console.log($('#container').length);
+    counter = 0;
+
 $('#container')
   .mousedown(function(){
     paint = true;
@@ -64,21 +71,15 @@ $('#container')
     X = Math.floor(x/W * 100);
     Y = Math.floor(y/H * 100);
     r = Math.floor(Math.random() * 90);
-    counter = (counter < 360) ? counter+1 : 0;
+    counter = (counter &lt; 360) ? counter+1 : 0;
     h = counter;
     //h = Math.floor((X+Y) * 360 / 200);
-    $('#container').append('<div class="postit" style="top:'+y+'px;left:'+x+'px;background:hsla('+h+',100%,50%,0.1);transform:rotate('+r+'deg)"></div>');
+    $('#container').append('&lt;div class="postit" style="top:'+y+'px;left:'+x+'px;background:hsla('+h+',100%,50%,0.1);transform:rotate('+r+'deg)">&lt;/div>');
     }
   });
 $('#reset').click(function(){
   $("#container").empty();
 });
-                    </pre>
-                    <pre miv-lang="html" miv-run-as="markup">
-&lt;link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700,100|Montserrat:400,700|Catamaran:400,100' rel='stylesheet' type='text/css'>
-&lt;h1>CLICK & DRAG&lt;/h1>
-&lt;div id="container">&lt;/div>
-&lt;div id="reset">RESET&lt;/div>
                     </pre>
                     <pre miv-lang="css" miv-run-as="style">
 *,
