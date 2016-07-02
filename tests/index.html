@@ -11,11 +11,24 @@
 </head>
 <body>
     <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <div class="mivhak" style="display:none">
-        <pre miv-lang="javascript"></pre>
-        <pre miv-lang="html"></pre>
-        <pre miv-lang="css"></pre>
+    <div id="qunit-fixture">
+        <div id="set-options-test">
+            <pre miv-lang="javascript"></pre>
+        </div>
+        <div id="set-height-test">
+            <pre miv-lang="javascript">
+                line 1
+                line 2
+                line 3
+            </pre>
+            <pre miv-lang="html">
+                line 1
+            </pre>
+            <pre miv-lang="css">
+                line 1
+                line 2
+            </pre>
+        </div>
     </div>
     <script src="https://code.jquery.com/qunit/qunit-1.23.1.js"></script>
     <script src="tests.js"></script>

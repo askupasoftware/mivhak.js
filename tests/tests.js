@@ -1,3 +1,5 @@
+QUnit.module( "Utility" );
+
 QUnit.test( "strToValue", function( assert ) {
     assert.equal( testapi.strToValue('true'), true );
     assert.equal( testapi.strToValue('false'), false );
@@ -41,12 +43,26 @@ QUnit.test( "max", function( assert ) {
     assert.equal( testapi.max([-1.5,7.5,9]),  9);
 });
 
+QUnit.module( "Core" );
+
 QUnit.test( "setOptions", function( assert ) {
     var options = $.extend(true, {}, testapi.mivhak.defaults);
-    options.lineNumbers = true;
-    options.ace.theme = 'clouds';
-    $('.mivhak').mivhak(options);
-    assert.equal( testapi.mivhak.defaults.lineNumbers, false);
-    assert.equal( $('.mivhak').data('mivhak').options.lineNumbers, true);
-    assert.equal( $('.mivhak').data('mivhak').options.ace.theme, 'clouds');
+    options.collapsed = true;
+    $('#set-options-test').mivhak(options);
+    assert.equal( testapi.mivhak.defaults.collapsed, false);
+    assert.equal( $('#set-options-test').data('mivhak').options.collapsed, true);
+    assert.equal( $('#set-options-test').hasClass('mivhak-collapsed'), true);
+});
+
+QUnit.test( "updateOptions", function( assert ) {
+    $('#set-options-test').mivhak({collapsed:false});
+    assert.equal( $('#set-options-test').data('mivhak').options.collapsed, false);
+    assert.equal( $('#set-options-test').hasClass('mivhak-collapsed'), false);
+});
+
+QUnit.test( "setHeight", function( assert ) {
+    $('#set-options-test').mivhak();
+    console.log($('#set-height-test').height());
+    console.log($('#set-height-test').data('mivhak'));
+    assert.expect(0);
 });
