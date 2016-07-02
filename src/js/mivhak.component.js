@@ -1,14 +1,29 @@
+/**
+ * The list of registered components.
+ * 
+ * @type Array
+ */
 Mivhak.components = [];
 
+/**
+ * Register a new component
+ * 
+ * @param {string} name The components name
+ * @param {Object} options A list of component properties
+ */
 Mivhak.component = function(name, options)
 {
     Mivhak.components[name] = options;
 };
 
 /**
+ * Render a new component
  * 
- * @param {type} name
- * @param {type} props
+ * TODO: move this into a seperate library
+ * 
+ * @param {string} name The components name
+ * @param {Object} props A list of component properties. 
+ * This overrides the component's initial property values.
  */
 Mivhak.render = function(name, props)
 {

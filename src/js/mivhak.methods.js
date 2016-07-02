@@ -54,6 +54,7 @@ Mivhak.methods = {
         });
     },
     update: function(options) {
-        // Update options here
+        this.setOptions( options );
+        this.initOptions();
     }
 };
