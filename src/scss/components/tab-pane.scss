@@ -25,6 +25,8 @@
             position: absolute;
             width: 100%;
             margin: 0;
+            top:0;
+            bottom:0;
             @include transition(all 25ms linear);
 
             .ace_scroller {
