@@ -3,20 +3,41 @@ Mivhak.component('tab-pane', {
     props: {
         pre: null,
         lang: null,
+        source: null,
         editor: null,
         padding: 10,
         mivhakInstance: null
     },
     created: function() {
         this.setEditor();
+        this.fetchRemoteSource();
         
         this.$el = $(this.pre).wrap(this.$el).parent().parent();
         this.$el.find('.mivhak-tab-pane-inner').css({margin: this.mivhakInstance.options.padding});
         this.setScrollbars();
+        
     },
     methods: {
         getTheme: function() {
             return this.mivhakInstance.options.theme === 'light' ? 'clouds' : 'ambiance';
+        },
+        fetchRemoteSource: function() {
+            var $this = this;
+            if(this.source) {
+                $.ajax(this.source).done(function(res){
+                    $this.editor.setValue(res,-1);
+                    
+                    // Refresh code viewer height
+                    $this.mivhakInstance.callMethod('setHeight',$this.mivhakInstance.options.height);
+                    
+                    // Refresh scrollbars
+                    raf(function(){
+                        $this.vscroll.refresh();
+                        $this.hscroll.refresh();
+                    });
+                });
+                
+            }
         },
         setScrollbars: function() {
             var $inner = $(this.pre),

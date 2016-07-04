@@ -13,6 +13,7 @@ Mivhak.component('tabs', {
                 $this.tabs.push(Mivhak.render('tab-pane',{
                     pre: source.pre, 
                     lang: source.lang,
+                    source: source.source,
                     mivhakInstance: $this.mivhakInstance
                 }));
         });

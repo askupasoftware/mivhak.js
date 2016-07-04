@@ -36,6 +36,10 @@ Mivhak.prototype.init = function()
     this.applyOptions();
 };
 
+/**
+ * Apply the options that were set by the user. This function is called when
+ * Mivhak is initiated, and every time the options are updated.
+ */
 Mivhak.prototype.applyOptions = function() 
 {
     this.callMethod('setHeight', this.options.height);
