@@ -72,6 +72,13 @@
     }
 }
 
+.mivhak.mivhak-no-topbar {
+    margin-top: 30px;
+    .mivhak-top-bar {
+        display: none;
+    }
+}
+
 [miv-theme="light"] {
     .mivhak-top-bar-button {color: $theme-light-color}
     .mivhak-top-bar-button:hover {color: $theme-light-color-hover}

@@ -168,6 +168,8 @@ Mivhak.prototype.applyOptions = function()
     this.callMethod('setHeight', this.options.height);
     this.callMethod('setAccentColor', this.options.accentColor);
     if(this.options.collapsed) this.callMethod('collapse');
+    if(!this.options.topbar) this.$selection.addClass('mivhak-no-topbar');
+    else this.$selection.removeClass('mivhak-no-topbar');
 };
 
 /**
@@ -361,6 +363,12 @@ Mivhak.defaults = {
     padding:        15,
     
     /**
+     * Whether to show/hide the top bar
+     * @type Boolean
+     */
+    topbar: true,
+    
+    /**
      * An array of strings/objects for the settings dropdown menu
      * @type Array
      */
@@ -545,6 +553,7 @@ Mivhak.methods = {
         this.topbar.$el.find('.mivhak-top-bar-button').css({'color': color});
         this.topbar.$el.find('.mivhak-dropdown-button').css({'color': color});
         this.topbar.$el.find('.mivhak-controls svg').css({'fill': color});
+        this.tabs.$el.find('.mivhak-scrollbar-thumb').css({'background-color': color});
         this.topbar.line.css({'background-color': color});
     }
 };Mivhak.icons = {};

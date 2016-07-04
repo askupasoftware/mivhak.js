@@ -42,14 +42,21 @@ function max( arr )
                 </div>
                 
                 <h3>Custom Accent Color</h3>
-                <div class="mivhak" miv-theme="light" miv-accent-color="#27ae60" miv-height="auto">
+                <div class="mivhak" miv-theme="light" miv-accent-color="#27ae60" miv-height="100">
                     <pre miv-lang="javascript">
 function max( arr )
 {
     var i = arr.length, maxval = arr[--i];
-    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i]; // Just a long comment to show the bottom scrollbar (turn off wrap lines)
     return maxval;
 }
+                    </pre>
+                </div>
+                
+                <h3>No top bar</h3>
+                <div class="mivhak" miv-theme="light" miv-height="auto" miv-topbar="false">
+                    <pre miv-lang="javascript">
+// Some cool code goes here...
                     </pre>
                 </div>
                 

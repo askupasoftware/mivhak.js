@@ -61,6 +61,12 @@ Mivhak.defaults = {
     padding:        15,
     
     /**
+     * Whether to show/hide the top bar
+     * @type Boolean
+     */
+    topbar: true,
+    
+    /**
      * An array of strings/objects for the settings dropdown menu
      * @type Array
      */
