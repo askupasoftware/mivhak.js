@@ -22,7 +22,8 @@ $.fn.mivhak = function( methodOrOptions ) {
             // Otherwise update existing settings (consequent calls will update, rather than recreate Mivhak)
             else
             {
-                Mivhak.methods.update.call($(this).data('mivhak'), methodOrOptions);
+                $(this).data('mivhak').setOptions( methodOrOptions );
+                $(this).data('mivhak').applyOptions();
             }
         }
         

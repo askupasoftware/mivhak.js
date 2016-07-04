@@ -67,4 +67,5 @@ testapi.readAttributes = readAttributes;
 testapi.average = average;
 testapi.max = max;
 testapi.min = min;
+testapi.raf = raf;
 /* end-test-code */

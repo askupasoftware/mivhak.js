@@ -55,16 +55,12 @@ QUnit.test( "setOptions", function( assert ) {
 });
 
 QUnit.test( "updateOptions", function( assert ) {
-    $('#set-options-test').mivhak({collapsed:false});
+    $('#set-options-test').mivhak();
     assert.equal( $('#set-options-test').data('mivhak').options.collapsed, false);
     assert.equal( $('#set-options-test').hasClass('mivhak-collapsed'), false);
-});
-
-QUnit.test( "setHeight", function( assert ) {
-    $('#set-options-test').mivhak();
-//    console.log($('#set-height-test').height());
-//    console.log($('#set-height-test').data('mivhak'));
-    assert.expect(0);
+    $('#set-options-test').mivhak({collapsed:true});
+    assert.equal( $('#set-options-test').data('mivhak').options.collapsed, true);
+    assert.equal( $('#set-options-test').hasClass('mivhak-collapsed'), true);
 });
 
 QUnit.module( "Methods" );
@@ -99,4 +95,14 @@ QUnit.test( "showTab", function( assert ) {
     assert.equal( $('#methods-test').data('mivhak').activeTab.lang, 'html');
 });
 
-
+QUnit.test( "setHeight", function( assert ) {
+    var done = assert.async();
+    $('#methods-test').mivhak();
+    $('#methods-test').mivhak('setHeight', 150);
+    // Wait for requestAnimationFrame
+    setTimeout(function(){
+        assert.equal( $('#methods-test').data('mivhak').state.height, 150);
+        assert.equal( $('#methods-test .mivhak-tabs').height(), 150);
+        done();
+    },100);
+});
