@@ -99,6 +99,7 @@ Mivhak.methods = {
         this.topbar.$el.find('.mivhak-top-bar-button').css({'color': color});
         this.topbar.$el.find('.mivhak-dropdown-button').css({'color': color});
         this.topbar.$el.find('.mivhak-controls svg').css({'fill': color});
+        this.tabs.$el.find('.mivhak-scrollbar-thumb').css({'background-color': color});
         this.topbar.line.css({'background-color': color});
     }
 };
