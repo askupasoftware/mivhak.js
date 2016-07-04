@@ -1,5 +1,6 @@
 /**
  * Converts a string to it's actual value, if applicable
+ * 
  * @param {String} str
  */
 function strToValue( str )
@@ -10,6 +11,12 @@ function strToValue( str )
     return str;
 }
 
+/**
+ * Convert hyphened text to camelCase.
+ * 
+ * @param {string} str
+ * @returns {string}
+ */
 function toCamelCase( str )
 {
     return str.replace(/-(.)/g,function(match){
@@ -19,6 +26,9 @@ function toCamelCase( str )
 
 /**
  * Reads the element's 'miv-' attributes and returns their values as an object
+ * 
+ * @param {DOMElement} el
+ * @returns {Object}
  */
 function readAttributes( el ) 
 {
@@ -32,6 +42,12 @@ function readAttributes( el )
     return options;
 }
 
+/**
+ * Get the average value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function average( arr )
 {
     var i = arr.length, sum = 0;
@@ -39,6 +55,12 @@ function average( arr )
     return sum/arr.length;
 }
 
+/**
+ * Get the maximum value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function max( arr )
 {
     var i = arr.length, maxval = arr[--i];
@@ -46,6 +68,12 @@ function max( arr )
     return maxval;
 }
 
+/**
+ * Get the minimum value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function min( arr )
 {
     var i = arr.length, minval = arr[--i];
@@ -53,7 +81,13 @@ function min( arr )
     return minval;
 }
 
-// Request animation frame
+/**
+ * Request animation frame. Uses setTimeout as a fallback if the browser does
+ * not support requestAnimationFrame (based on 60 frames per second).
+ * 
+ * @param {type} cb
+ * @returns {Number}
+ */
 var raf = window.requestAnimationFrame || 
           window.webkitRequestAnimationFrame || 
           window.mozRequestAnimationFrame ||
