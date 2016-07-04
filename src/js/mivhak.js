@@ -32,8 +32,8 @@ Mivhak.prototype.init = function()
     this.initState();
     this.parseSources();
     this.createUI();
-    this.callMethod('showTab',0); // Show first tab initially
     this.applyOptions();
+    this.callMethod('showTab',0); // Show first tab initially
 };
 
 /**
@@ -47,6 +47,9 @@ Mivhak.prototype.applyOptions = function()
     if(this.options.collapsed) this.callMethod('collapse');
     if(!this.options.topbar) this.$selection.addClass('mivhak-no-topbar');
     else this.$selection.removeClass('mivhak-no-topbar');
+    
+    this.createCaption();
+    this.createLivePreview();
 };
 
 /**
@@ -110,13 +113,6 @@ Mivhak.prototype.createUI = function()
     this.$selection.prepend(this.tabs.$el);
     this.$selection.prepend(this.topbar.$el);
     this.tabs.$el.prepend(this.notifier.$el);
-    
-    if(this.options.caption) {
-        this.caption = Mivhak.render('caption',{text: this.options.caption});
-        this.$selection.append(this.caption.$el);
-    }
-    
-    if(this.options.runnable) this.createLivePreview();
 };
 
 /**
@@ -158,13 +154,30 @@ Mivhak.prototype.parseSources = function()
     });
 };
 
+Mivhak.prototype.createCaption = function()
+{
+    if(this.options.caption)
+    {
+        if(!this.caption)
+        {
+            this.caption = Mivhak.render('caption',{text: this.options.caption});
+            this.$selection.append(this.caption.$el);
+        }
+        else this.caption.setText(this.options.caption);
+    }
+    else this.$selection.addClass('mivhak-no-caption');
+};
+
 /**
  * Create the live preview iframe window
  */
 Mivhak.prototype.createLivePreview = function()
 {
-    this.preview = Mivhak.render('live-preview',{sources: this.state.sources});
-    this.tabs.$el.append(this.preview.$el);
+    if(this.options.runnable && typeof this.preview === 'undefined')
+    {
+        this.preview = Mivhak.render('live-preview',{sources: this.state.sources});
+        this.tabs.$el.append(this.preview.$el);
+    }
 };
 
 /**

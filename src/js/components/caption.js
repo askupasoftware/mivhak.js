@@ -4,6 +4,11 @@ Mivhak.component('caption', {
         text: null
     },
     created: function() {
-        this.$el.html(this.text);
+        this.setText(this.text);
+    },
+    methods: {
+        setText: function(text) {
+            this.$el.html(text);
+        }
     }
 });

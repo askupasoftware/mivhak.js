@@ -17,6 +17,10 @@
     @include opacity(0);
     @include transform(translateY(10px));
 }
+
+.mivhak.mivhak-no-caption {
+    margin-bottom: 30px;
+}
     
 [miv-theme="light"] .mivhak-caption {color: $theme-light-color}
 [miv-theme="dark"] .mivhak-caption {color: $theme-dark-color}
