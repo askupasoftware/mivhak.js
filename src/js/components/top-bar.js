@@ -45,8 +45,6 @@ Mivhak.component('top-bar', {
                 text: lang,
                 onClick: function() {
                     $this.mivhakInstance.callMethod('showTab',i);
-                    if($this.mivhakInstance.options.runnable)
-                        $this.mivhakInstance.preview.hide();
                 }
             });
             this.navTabs.push(button);

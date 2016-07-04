@@ -39,6 +39,8 @@ Mivhak.methods = {
     showTab: function(index) {
         this.tabs.showTab(index);
         this.topbar.activateNavTab(index);
+        if(this.options.runnable)
+            this.preview.hide();
     },
     setHeight: function(height) {
         var $this = this;
@@ -55,6 +57,6 @@ Mivhak.methods = {
     },
     update: function(options) {
         this.setOptions( options );
-        this.initOptions();
+        this.applyOptions();
     }
 };

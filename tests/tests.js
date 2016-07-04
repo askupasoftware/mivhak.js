@@ -62,7 +62,41 @@ QUnit.test( "updateOptions", function( assert ) {
 
 QUnit.test( "setHeight", function( assert ) {
     $('#set-options-test').mivhak();
-    console.log($('#set-height-test').height());
-    console.log($('#set-height-test').data('mivhak'));
+//    console.log($('#set-height-test').height());
+//    console.log($('#set-height-test').data('mivhak'));
     assert.expect(0);
 });
+
+QUnit.module( "Methods" );
+
+QUnit.test( "toggleLineWrap", function( assert ) {
+    $('#methods-test').mivhak(); // Line wrap is initially set to true
+    $('#methods-test').mivhak('toggleLineWrap');
+    assert.equal($('#methods-test').data('mivhak').state.lineWrap, false);
+    $('#methods-test').mivhak('toggleLineWrap');
+    assert.equal($('#methods-test').data('mivhak').state.lineWrap, true);
+});
+
+QUnit.test( "collapse", function( assert ) {
+    $('#methods-test').mivhak();
+    $('#methods-test').mivhak('collapse');
+    assert.equal( $('#methods-test').data('mivhak').state.collapsed, true);
+    assert.equal( $('#methods-test').hasClass('mivhak-collapsed'), true);
+});
+
+QUnit.test( "expand", function( assert ) {
+    $('#methods-test').mivhak();
+    $('#methods-test').mivhak('collapse');
+    $('#methods-test').mivhak('expand');
+    assert.equal( $('#methods-test').data('mivhak').state.collapsed, false);
+    assert.equal( $('#methods-test').hasClass('mivhak-collapsed'), false);
+});
+
+QUnit.test( "showTab", function( assert ) {
+    $('#methods-test').mivhak();
+    assert.equal( $('#methods-test').data('mivhak').activeTab.lang, 'javascript');
+    $('#methods-test').mivhak('showTab',1);
+    assert.equal( $('#methods-test').data('mivhak').activeTab.lang, 'html');
+});
+
+

@@ -33,10 +33,10 @@ Mivhak.prototype.init = function()
     this.parseSources();
     this.createUI();
     this.callMethod('showTab',0); // Show first tab initially
-    this.initOptions();
+    this.applyOptions();
 };
 
-Mivhak.prototype.initOptions = function() 
+Mivhak.prototype.applyOptions = function() 
 {
     this.callMethod('setHeight', this.options.height);
     if(this.options.collapsed) this.callMethod('collapse');
@@ -139,6 +139,10 @@ Mivhak.prototype.calculateHeight = function(h)
     if(!isNaN(h)) return parseInt(h);
 };
 
+/**
+ * Loop through each PRE element inside this.$selection and store it's options
+ * in this.state.sources, merging it with the default option values.
+ */
 Mivhak.prototype.parseSources = function()
 {
     var $this = this;
@@ -147,12 +151,20 @@ Mivhak.prototype.parseSources = function()
     });
 };
 
+/**
+ * Create the live preview iframe window
+ */
 Mivhak.prototype.createLivePreview = function()
 {
     this.preview = Mivhak.render('live-preview',{sources: this.state.sources});
     this.tabs.$el.append(this.preview.$el);
 };
 
+/**
+ * Remove all generated elements, data and events.
+ * 
+ * TODO: keep initial HTML
+ */
 Mivhak.prototype.destroy = function() 
 {
     this.$selection.empty();
