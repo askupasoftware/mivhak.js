@@ -86,5 +86,19 @@ Mivhak.methods = {
                 tab.hscroll.refresh();
             });
         });
+    },
+    
+    /**
+     * Set the code viewer's accent color. Applied to the nav-tabs text color, 
+     * underline, scrollbars and dropdown menu text color.
+     * 
+     * @param {string} color
+     */
+    setAccentColor: function(color) {
+        if(!color) return;
+        this.topbar.$el.find('.mivhak-top-bar-button').css({'color': color});
+        this.topbar.$el.find('.mivhak-dropdown-button').css({'color': color});
+        this.topbar.$el.find('.mivhak-controls svg').css({'fill': color});
+        this.topbar.line.css({'background-color': color});
     }
 };

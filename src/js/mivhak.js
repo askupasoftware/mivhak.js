@@ -43,6 +43,7 @@ Mivhak.prototype.init = function()
 Mivhak.prototype.applyOptions = function() 
 {
     this.callMethod('setHeight', this.options.height);
+    this.callMethod('setAccentColor', this.options.accentColor);
     if(this.options.collapsed) this.callMethod('collapse');
 };
 

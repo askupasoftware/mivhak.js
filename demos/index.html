@@ -41,6 +41,18 @@ function max( arr )
                     </pre>
                 </div>
                 
+                <h3>Custom Accent Color</h3>
+                <div class="mivhak" miv-theme="light" miv-accent-color="#27ae60" miv-height="auto">
+                    <pre miv-lang="javascript">
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i];
+    return maxval;
+}
+                    </pre>
+                </div>
+                
                 <h3>External code embedding</h3>
                 <div class="mivhak" miv-theme="light" miv-height="200" miv-caption="wp-dynamic-css/functions.php via <a href='https://github.com/askupasoftware/wp-dynamic-css/blob/master/functions.php'>GitHub</a>">
                     <pre miv-lang="php" miv-source="https://raw.githubusercontent.com/askupasoftware/wp-dynamic-css/master/functions.php"></pre>

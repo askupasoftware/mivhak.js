@@ -27,7 +27,7 @@ Mivhak.defaults = {
      * dropdown item colors.
      * @type String
      */
-    accentColor:    'currentColor',
+    accentColor:    false,
     
     /**
      * Whether to collapse the code viewer initially

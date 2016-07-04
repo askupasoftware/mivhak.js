@@ -113,3 +113,9 @@ QUnit.test( "setHeight", function( assert ) {
         done();
     },100);
 });
+
+QUnit.test( "setAccentColor", function( assert ) {
+    $('#methods-test').mivhak({accentColor: 'rgb(0, 0, 255)'});
+    assert.equal( $('#methods-test').data('mivhak').options.accentColor, 'rgb(0, 0, 255)');
+    assert.equal( $('#methods-test').find('.mivhak-top-bar-button').css('color'), 'rgb(0, 0, 255)');
+});

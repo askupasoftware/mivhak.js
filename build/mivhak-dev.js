@@ -178,6 +178,7 @@ Mivhak.prototype.init = function()
 Mivhak.prototype.applyOptions = function() 
 {
     this.callMethod('setHeight', this.options.height);
+    this.callMethod('setAccentColor', this.options.accentColor);
     if(this.options.collapsed) this.callMethod('collapse');
 };
 
@@ -340,7 +341,7 @@ Mivhak.defaults = {
      * dropdown item colors.
      * @type String
      */
-    accentColor:    'currentColor',
+    accentColor:    false,
     
     /**
      * Whether to collapse the code viewer initially
@@ -545,6 +546,20 @@ Mivhak.methods = {
                 tab.hscroll.refresh();
             });
         });
+    },
+    
+    /**
+     * Set the code viewer's accent color. Applied to the nav-tabs text color, 
+     * underline, scrollbars and dropdown menu text color.
+     * 
+     * @param {string} color
+     */
+    setAccentColor: function(color) {
+        if(!color) return;
+        this.topbar.$el.find('.mivhak-top-bar-button').css({'color': color});
+        this.topbar.$el.find('.mivhak-dropdown-button').css({'color': color});
+        this.topbar.$el.find('.mivhak-controls svg').css({'fill': color});
+        this.topbar.line.css({'background-color': color});
     }
 };Mivhak.icons = {};
 
