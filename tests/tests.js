@@ -43,6 +43,13 @@ QUnit.test( "max", function( assert ) {
     assert.equal( testapi.max([-1.5,7.5,9]),  9);
 });
 
+QUnit.test( "getEditorHeight", function( assert ) {
+    $('#utility-test').mivhak();
+    var $editor = $($('#utility-test').data('mivhak').activeTab.pre),
+        expectedHeight = $('#utility-test').find('.ace_text-layer').children().height()*3;
+    assert.equal( testapi.getEditorHeight($editor), expectedHeight );
+});
+
 QUnit.module( "Core" );
 
 QUnit.test( "setOptions", function( assert ) {

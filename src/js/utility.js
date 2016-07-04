@@ -82,6 +82,21 @@ function min( arr )
 }
 
 /**
+ * Calculate the editor's height based on the number of lines & line height.
+ * 
+ * @param {jQuery} $editor Ther editor wrapper element (PRE)
+ * @returns {Number}
+ */
+function getEditorHeight( $editor )
+{
+    var height = 0;
+    $editor.find('.ace_text-layer').children().each(function(){
+        height += $(this).height();
+    });
+    return height;
+}
+
+/**
  * Request animation frame. Uses setTimeout as a fallback if the browser does
  * not support requestAnimationFrame (based on 60 frames per second).
  * 
@@ -101,5 +116,6 @@ testapi.readAttributes = readAttributes;
 testapi.average = average;
 testapi.max = max;
 testapi.min = min;
+testapi.getEditorHeight = getEditorHeight;
 testapi.raf = raf;
 /* end-test-code */

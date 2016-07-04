@@ -33,7 +33,7 @@ Mivhak.component('vertical-scrollbar', {
         },
         updateState: function() {
             var oldState = $.extend({}, this.state);
-            this.state.a = this.getEditorHeight();
+            this.state.a = getEditorHeight(this.$inner);
             this.state.b = this.mivhakInstance.state.height;
             this.state.c = this.mivhakInstance.state.height-this.mivhakInstance.options.padding*2;
             this.state.d = Math.max(this.state.c*this.state.b/this.state.a,this.minHeight);
@@ -93,7 +93,7 @@ Mivhak.component('vertical-scrollbar', {
                 lastPageY = e.pageY;
                 
                 raf(function(){
-                    didScroll = $this.doScroll(delta > 0 ? 'down' : 'up', Math.abs(delta*$this.getEditorHeight()/$this.$outer.parent().height()));
+                    didScroll = $this.doScroll(delta > 0 ? 'down' : 'up', Math.abs(delta*getEditorHeight($this.$inner)/$this.$outer.parent().height()));
                     if(0 !== didScroll) $this.moveBar();
                 });
             }
@@ -143,17 +143,6 @@ Mivhak.component('vertical-scrollbar', {
         getDifference: function()
         {
             return this.state.a - this.state.c;
-        },
-        
-        /**
-         * Calculate the editor's height based on the number of lines
-         */
-        getEditorHeight: function() {
-            var height = 0;
-            this.$inner.find('.ace_text-layer').children().each(function(){
-                height += $(this).height();
-            });
-            return height;
         }
     }
 });

@@ -2,7 +2,7 @@
  * Package:      mivhak-js
  * URL:          http://products.askupasoftware.com/mivhak-js
  * Version:      1.0.0
- * Date:         2016-07-03
+ * Date:         2016-07-04
  * Dependencies: jQuery Mousewheel, Ace Editor
  * License:      GNU GENERAL PUBLIC LICENSE
  *
@@ -12,6 +12,7 @@
 (function ( $ ) {// Ace global config
 ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/');/**
  * Converts a string to it's actual value, if applicable
+ * 
  * @param {String} str
  */
 function strToValue( str )
@@ -22,6 +23,12 @@ function strToValue( str )
     return str;
 }
 
+/**
+ * Convert hyphened text to camelCase.
+ * 
+ * @param {string} str
+ * @returns {string}
+ */
 function toCamelCase( str )
 {
     return str.replace(/-(.)/g,function(match){
@@ -31,6 +38,9 @@ function toCamelCase( str )
 
 /**
  * Reads the element's 'miv-' attributes and returns their values as an object
+ * 
+ * @param {DOMElement} el
+ * @returns {Object}
  */
 function readAttributes( el ) 
 {
@@ -44,6 +54,12 @@ function readAttributes( el )
     return options;
 }
 
+/**
+ * Get the average value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function average( arr )
 {
     var i = arr.length, sum = 0;
@@ -51,6 +67,12 @@ function average( arr )
     return sum/arr.length;
 }
 
+/**
+ * Get the maximum value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function max( arr )
 {
     var i = arr.length, maxval = arr[--i];
@@ -58,6 +80,12 @@ function max( arr )
     return maxval;
 }
 
+/**
+ * Get the minimum value of all elements in the given array.
+ * 
+ * @param {Array} arr
+ * @returns {Number}
+ */
 function min( arr )
 {
     var i = arr.length, minval = arr[--i];
@@ -65,7 +93,28 @@ function min( arr )
     return minval;
 }
 
-// Request animation frame
+/**
+ * Calculate the editor's height based on the number of lines & line height.
+ * 
+ * @param {jQuery} $editor Ther editor wrapper element (PRE)
+ * @returns {Number}
+ */
+function getEditorHeight( $editor )
+{
+    var height = 0;
+    $editor.find('.ace_text-layer').children().each(function(){
+        height += $(this).height();
+    });
+    return height;
+}
+
+/**
+ * Request animation frame. Uses setTimeout as a fallback if the browser does
+ * not support requestAnimationFrame (based on 60 frames per second).
+ * 
+ * @param {type} cb
+ * @returns {Number}
+ */
 var raf = window.requestAnimationFrame || 
           window.webkitRequestAnimationFrame || 
           window.mozRequestAnimationFrame ||
@@ -204,12 +253,12 @@ Mivhak.prototype.calculateHeight = function(h)
         i = this.tabs.tabs.length;
 
     while(i--)
-        heights.push(this.tabs.tabs[i].vscroll.getEditorHeight()+padding);
+        heights.push(getEditorHeight($(this.tabs.tabs[i].pre))+padding);
 
     if('average' === h) return average(heights);
     if('shortest' === h) return min(heights);
     if('longest' === h) return max(heights);
-    if('auto' === h) return this.activeTab.vscroll.getEditorHeight()+padding;
+    if('auto' === h) return getEditorHeight($(this.activeTab.pre))+padding;
     if(!isNaN(h)) return parseInt(h);
 };
 
@@ -1065,7 +1114,7 @@ Mivhak.render = function(name, props)
         },
         updateState: function() {
             var oldState = $.extend({}, this.state);
-            this.state.a = this.getEditorHeight();
+            this.state.a = getEditorHeight(this.$inner);
             this.state.b = this.mivhakInstance.state.height;
             this.state.c = this.mivhakInstance.state.height-this.mivhakInstance.options.padding*2;
             this.state.d = Math.max(this.state.c*this.state.b/this.state.a,this.minHeight);
@@ -1125,7 +1174,7 @@ Mivhak.render = function(name, props)
                 lastPageY = e.pageY;
                 
                 raf(function(){
-                    didScroll = $this.doScroll(delta > 0 ? 'down' : 'up', Math.abs(delta*$this.getEditorHeight()/$this.$outer.parent().height()));
+                    didScroll = $this.doScroll(delta > 0 ? 'down' : 'up', Math.abs(delta*getEditorHeight($this.$inner)/$this.$outer.parent().height()));
                     if(0 !== didScroll) $this.moveBar();
                 });
             }
@@ -1175,17 +1224,6 @@ Mivhak.render = function(name, props)
         getDifference: function()
         {
             return this.state.a - this.state.c;
-        },
-        
-        /**
-         * Calculate the editor's height based on the number of lines
-         */
-        getEditorHeight: function() {
-            var height = 0;
-            this.$inner.find('.ace_text-layer').children().each(function(){
-                height += $(this).height();
-            });
-            return height;
         }
     }
 });/**
