@@ -1,9 +1,7 @@
 Mivhak.component('tab-pane', {
     template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
-        pre:            null,
-        lang:           null,
-        source:         null,
+        resource:       null,
         editor:         null,
         index:          null,
         padding:        10,
@@ -12,8 +10,9 @@ Mivhak.component('tab-pane', {
     created: function() {
         this.setEditor();
         this.fetchRemoteSource();
+        this.markLines();
         
-        this.$el = $(this.pre).wrap(this.$el).parent().parent();
+        this.$el = $(this.resource.pre).wrap(this.$el).parent().parent();
         this.$el.find('.mivhak-tab-pane-inner').css({margin: this.mivhakInstance.options.padding});
         this.setScrollbars();
         
@@ -24,8 +23,8 @@ Mivhak.component('tab-pane', {
         },
         fetchRemoteSource: function() {
             var $this = this;
-            if(this.source) {
-                $.ajax(this.source).done(function(res){
+            if(this.resource.source) {
+                $.ajax(this.resource.source).done(function(res){
                     $this.editor.setValue(res,-1);
                     
                     // Refresh code viewer height
@@ -41,7 +40,7 @@ Mivhak.component('tab-pane', {
             }
         },
         setScrollbars: function() {
-            var $inner = $(this.pre),
+            var $inner = $(this.resource.pre),
                 $outer = this.$el.find('.mivhak-tab-pane-inner');
             
             this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer, mivhakInstance: this.mivhakInstance});
@@ -64,15 +63,15 @@ Mivhak.component('tab-pane', {
         setEditor: function() {
             
             // Remove redundant space from code
-            this.pre.textContent = this.pre.textContent.trim(); 
+            this.resource.pre.textContent = this.resource.pre.textContent.trim(); 
             
             // Set editor options
-            this.editor = ace.edit(this.pre);
+            this.editor = ace.edit(this.resource.pre);
             this.editor.setReadOnly(!this.mivhakInstance.options.editable);
             this.editor.setTheme("ace/theme/"+this.getTheme());
             this.editor.setShowPrintMargin(false);
             this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
-            this.editor.getSession().setMode("ace/mode/"+this.lang);
+            this.editor.getSession().setMode("ace/mode/"+this.resource.lang);
             this.editor.getSession().setUseWorker(false); // Disable syntax checking
             this.editor.getSession().setUseWrapMode(true); // Set initial line wrapping
 
@@ -90,6 +89,22 @@ Mivhak.component('tab-pane', {
                 this.editor.getSession().on('change', function(a,b,c) {
                     $this.mivhakInstance.resources.update($this.index, $this.editor.getValue());
                 });
+            }
+        },
+        markLines: function()
+        {
+            if(!this.resource.mark) return;
+            var ranges = strToRange(this.resource.mark),
+                i = ranges.length,
+                AceRange = ace.require("ace/range").Range;
+
+            while(i--)
+            {
+                this.editor.session.addMarker(
+                    new AceRange(ranges[i].start, 0, ranges[i].end, 1), // Define the range of the marker
+                    "ace_active-line",     // Set the CSS class for the marker
+                    "fullLine"             // Marker type
+                );
             }
         }
     }

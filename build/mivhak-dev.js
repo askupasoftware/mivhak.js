@@ -112,6 +112,48 @@ function getEditorHeight( $editor )
 }
 
 /**
+ * Convert a string like "3, 5-7" into an array of ranges in to form of
+ * [
+ *   {start:2, end:2},
+ *   {start:4, end:6},
+ * ]
+ * The string should be given as a list if comma delimited 1 based ranges.
+ * The result is given as a 0 based array of ranges.
+ * 
+ * @param {string} str
+ * @returns {Array}
+ */
+function strToRange( str )
+{
+    var range = str.replace(' ', '').split(','),
+        i = range.length,
+        ranges = [],
+        start, end, splitted;
+    
+    while(i--)
+    {
+        // Multiple lines highlight
+        if( range[i].indexOf('-') > -1 )
+        {
+            splitted = range[i].split('-');
+            start = parseInt(splitted[0])-1;
+            end = parseInt(splitted[1])-1;
+        }
+
+        // Single line highlight
+        else
+        {
+            start = parseInt(range[i])-1;
+            end = start;
+        }
+        
+        ranges.unshift({start:start,end:end});
+    }
+    
+    return ranges;
+}
+
+/**
  * Request animation frame. Uses setTimeout as a fallback if the browser does
  * not support requestAnimationFrame (based on 60 frames per second).
  * 
@@ -132,6 +174,7 @@ testapi.average = average;
 testapi.max = max;
 testapi.min = min;
 testapi.getEditorHeight = getEditorHeight;
+testapi.strToRange = strToRange;
 testapi.raf = raf;
 /* end-test-code *//**
  * The constructor.
@@ -268,12 +311,12 @@ Mivhak.prototype.calculateHeight = function(h)
         i = this.tabs.tabs.length;
 
     while(i--)
-        heights.push(getEditorHeight($(this.tabs.tabs[i].pre))+padding);
+        heights.push(getEditorHeight($(this.tabs.tabs[i].resource.pre))+padding);
 
     if('average' === h) return average(heights);
     if('shortest' === h) return min(heights);
     if('longest' === h) return max(heights);
-    if('auto' === h) return getEditorHeight($(this.activeTab.pre))+padding;
+    if('auto' === h) return getEditorHeight($(this.activeTab.resource.pre))+padding;
     if(!isNaN(h)) return parseInt(h);
 };
 
@@ -424,7 +467,7 @@ Mivhak.resourceDefaults = {
     
     /**
      * A URL to an external source
-     * @type string
+     * @type bool|string
      */
     source:         false,
     
@@ -433,7 +476,13 @@ Mivhak.resourceDefaults = {
      * external libraries for the live preview and don't need to see their contents.
      * @type Boolean
      */
-    visible:        true
+    visible:        true,
+    
+    /**
+     * Mark/highlight a range of lines given as a string in the format '1, 3-4'
+     * @type bool|string
+     */
+    mark:           false
 };var Resources = function() {
     this.data = [];
 };
@@ -589,7 +638,7 @@ Mivhak.methods = {
             $this.state.height = $this.calculateHeight(height);
             $this.tabs.$el.height($this.state.height);
             $.each($this.tabs.tabs, function(i,tab) {
-                $(tab.pre).height(height);
+                $(tab.resource.pre).height(height);
                 tab.editor.resize();
                 tab.vscroll.refresh();
                 tab.hscroll.refresh();
@@ -705,6 +754,13 @@ Mivhak.render = function(name, props)
                 button.append(button.$toggle.$el);
             }
             $this.$el.append(button);
+        });
+        
+        // Hide dropdown on outside click
+        $(window).click(function(e){
+            if(!$(e.target).closest('.mivhak-icon-cog').length) {
+                $this.$el.removeClass('mivhak-dropdown-visible');
+            }
         });
     },
     methods: {
@@ -938,9 +994,7 @@ Mivhak.render = function(name, props)
 });Mivhak.component('tab-pane', {
     template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
-        pre:            null,
-        lang:           null,
-        source:         null,
+        resource:       null,
         editor:         null,
         index:          null,
         padding:        10,
@@ -949,8 +1003,9 @@ Mivhak.render = function(name, props)
     created: function() {
         this.setEditor();
         this.fetchRemoteSource();
+        this.markLines();
         
-        this.$el = $(this.pre).wrap(this.$el).parent().parent();
+        this.$el = $(this.resource.pre).wrap(this.$el).parent().parent();
         this.$el.find('.mivhak-tab-pane-inner').css({margin: this.mivhakInstance.options.padding});
         this.setScrollbars();
         
@@ -961,8 +1016,8 @@ Mivhak.render = function(name, props)
         },
         fetchRemoteSource: function() {
             var $this = this;
-            if(this.source) {
-                $.ajax(this.source).done(function(res){
+            if(this.resource.source) {
+                $.ajax(this.resource.source).done(function(res){
                     $this.editor.setValue(res,-1);
                     
                     // Refresh code viewer height
@@ -978,7 +1033,7 @@ Mivhak.render = function(name, props)
             }
         },
         setScrollbars: function() {
-            var $inner = $(this.pre),
+            var $inner = $(this.resource.pre),
                 $outer = this.$el.find('.mivhak-tab-pane-inner');
             
             this.vscroll = Mivhak.render('vertical-scrollbar',{editor: this.editor, $inner: $inner, $outer: $outer, mivhakInstance: this.mivhakInstance});
@@ -1001,15 +1056,15 @@ Mivhak.render = function(name, props)
         setEditor: function() {
             
             // Remove redundant space from code
-            this.pre.textContent = this.pre.textContent.trim(); 
+            this.resource.pre.textContent = this.resource.pre.textContent.trim(); 
             
             // Set editor options
-            this.editor = ace.edit(this.pre);
+            this.editor = ace.edit(this.resource.pre);
             this.editor.setReadOnly(!this.mivhakInstance.options.editable);
             this.editor.setTheme("ace/theme/"+this.getTheme());
             this.editor.setShowPrintMargin(false);
             this.editor.renderer.setShowGutter(this.mivhakInstance.options.lineNumbers);
-            this.editor.getSession().setMode("ace/mode/"+this.lang);
+            this.editor.getSession().setMode("ace/mode/"+this.resource.lang);
             this.editor.getSession().setUseWorker(false); // Disable syntax checking
             this.editor.getSession().setUseWrapMode(true); // Set initial line wrapping
 
@@ -1028,6 +1083,22 @@ Mivhak.render = function(name, props)
                     $this.mivhakInstance.resources.update($this.index, $this.editor.getValue());
                 });
             }
+        },
+        markLines: function()
+        {
+            if(!this.resource.mark) return;
+            var ranges = strToRange(this.resource.mark),
+                i = ranges.length,
+                AceRange = ace.require("ace/range").Range;
+
+            while(i--)
+            {
+                this.editor.session.addMarker(
+                    new AceRange(ranges[i].start, 0, ranges[i].end, 1), // Define the range of the marker
+                    "ace_active-line",     // Set the CSS class for the marker
+                    "fullLine"             // Marker type
+                );
+            }
         }
     }
 });Mivhak.component('tabs', {
@@ -1040,12 +1111,10 @@ Mivhak.render = function(name, props)
     created: function() {
         var $this = this;
         this.$el = this.mivhakInstance.$selection.find('pre').wrapAll(this.$el).parent();
-        $.each(this.mivhakInstance.resources.data,function(i, source){
-            if(source.visible)
+        $.each(this.mivhakInstance.resources.data,function(i, resource){
+            if(resource.visible)
                 $this.tabs.push(Mivhak.render('tab-pane',{
-                    pre: source.pre, 
-                    lang: source.lang,
-                    source: source.source,
+                    resource: resource,
                     index: i,
                     mivhakInstance: $this.mivhakInstance
                 }));

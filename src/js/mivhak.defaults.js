@@ -93,7 +93,7 @@ Mivhak.resourceDefaults = {
     
     /**
      * A URL to an external source
-     * @type string
+     * @type bool|string
      */
     source:         false,
     
@@ -102,5 +102,11 @@ Mivhak.resourceDefaults = {
      * external libraries for the live preview and don't need to see their contents.
      * @type Boolean
      */
-    visible:        true
+    visible:        true,
+    
+    /**
+     * Mark/highlight a range of lines given as a string in the format '1, 3-4'
+     * @type bool|string
+     */
+    mark:           false
 };

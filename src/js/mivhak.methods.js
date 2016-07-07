@@ -80,7 +80,7 @@ Mivhak.methods = {
             $this.state.height = $this.calculateHeight(height);
             $this.tabs.$el.height($this.state.height);
             $.each($this.tabs.tabs, function(i,tab) {
-                $(tab.pre).height(height);
+                $(tab.resource.pre).height(height);
                 tab.editor.resize();
                 tab.vscroll.refresh();
                 tab.hscroll.refresh();

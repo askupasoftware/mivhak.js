@@ -65,6 +65,21 @@ function max( arr )
                     <pre miv-lang="php" miv-source="https://raw.githubusercontent.com/askupasoftware/wp-dynamic-css/master/functions.php"></pre>
                 </div>
                 
+                <h3>Line Marking/Highlighting</h3>
+                <div class="mivhak" miv-theme="light" miv-height="auto" miv-caption="Highlighting/marking lines 3, 5-7">
+                    <pre miv-lang="javascript" miv-mark="3, 5-7">
+function max( arr )
+{
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i]; // Just a long comment to show the bottom scrollbar (turn off wrap lines)
+    return maxval;
+    var i = arr.length, maxval = arr[--i];
+    while(i--) if(arr[i] > maxval) maxval = arr[i]; // Just a long comment to show the bottom scrollbar (turn off wrap lines)
+    return maxval;
+}
+                    </pre>
+                </div>
+                
                 <h3>Live Code Previewing</h3>
                 <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="average" miv-caption="<a href='http://codepen.io/V17h3m/pen/LZZKJm'>Rainbow Brush</a> curtesy of Vicio Bonura">
                     <pre miv-visible="false" miv-run-as="script" miv-source="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></pre>

@@ -40,6 +40,10 @@
             .ace_layer {
                 z-index: 0; // Prevent code from overlapping dropdown
             }
+            
+            .ace_active-line {
+                background-color: #d6e2e4;
+            }
         }
     }
 }

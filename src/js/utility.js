@@ -97,6 +97,48 @@ function getEditorHeight( $editor )
 }
 
 /**
+ * Convert a string like "3, 5-7" into an array of ranges in to form of
+ * [
+ *   {start:2, end:2},
+ *   {start:4, end:6},
+ * ]
+ * The string should be given as a list if comma delimited 1 based ranges.
+ * The result is given as a 0 based array of ranges.
+ * 
+ * @param {string} str
+ * @returns {Array}
+ */
+function strToRange( str )
+{
+    var range = str.replace(' ', '').split(','),
+        i = range.length,
+        ranges = [],
+        start, end, splitted;
+    
+    while(i--)
+    {
+        // Multiple lines highlight
+        if( range[i].indexOf('-') > -1 )
+        {
+            splitted = range[i].split('-');
+            start = parseInt(splitted[0])-1;
+            end = parseInt(splitted[1])-1;
+        }
+
+        // Single line highlight
+        else
+        {
+            start = parseInt(range[i])-1;
+            end = start;
+        }
+        
+        ranges.unshift({start:start,end:end});
+    }
+    
+    return ranges;
+}
+
+/**
  * Request animation frame. Uses setTimeout as a fallback if the browser does
  * not support requestAnimationFrame (based on 60 frames per second).
  * 
@@ -117,5 +159,6 @@ testapi.average = average;
 testapi.max = max;
 testapi.min = min;
 testapi.getEditorHeight = getEditorHeight;
+testapi.strToRange = strToRange;
 testapi.raf = raf;
 /* end-test-code */

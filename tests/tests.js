@@ -45,9 +45,15 @@ QUnit.test( "max", function( assert ) {
 
 QUnit.test( "getEditorHeight", function( assert ) {
     $('#utility-test').mivhak();
-    var $editor = $($('#utility-test').data('mivhak').activeTab.pre),
+    var $editor = $($('#utility-test').data('mivhak').activeTab.resource.pre),
         expectedHeight = $('#utility-test').find('.ace_text-layer').children().height()*3;
     assert.equal( testapi.getEditorHeight($editor), expectedHeight );
+});
+
+QUnit.test( "strToRange", function( assert ) {
+    assert.deepEqual( testapi.strToRange('3'), [{start:2,end:2}] );
+    assert.deepEqual( testapi.strToRange('3, 5-7'), [{start:2,end:2},{start:4,end:6}] );
+    assert.deepEqual( testapi.strToRange('3  , 5 - 7'), [{start:2,end:2},{start:4,end:6}] );
 });
 
 QUnit.module( "Core" );
@@ -97,9 +103,9 @@ QUnit.test( "expand", function( assert ) {
 
 QUnit.test( "showTab", function( assert ) {
     $('#methods-test').mivhak();
-    assert.equal( $('#methods-test').data('mivhak').activeTab.lang, 'javascript');
+    assert.equal( $('#methods-test').data('mivhak').activeTab.resource.lang, 'javascript');
     $('#methods-test').mivhak('showTab',1);
-    assert.equal( $('#methods-test').data('mivhak').activeTab.lang, 'html');
+    assert.equal( $('#methods-test').data('mivhak').activeTab.resource.lang, 'html');
 });
 
 QUnit.test( "setHeight", function( assert ) {
