@@ -20,6 +20,13 @@ Mivhak.component('dropdown', {
             }
             $this.$el.append(button);
         });
+        
+        // Hide dropdown on outside click
+        $(window).click(function(e){
+            if(!$(e.target).closest('.mivhak-icon-cog').length) {
+                $this.$el.removeClass('mivhak-dropdown-visible');
+            }
+        });
     },
     methods: {
         toggle: function() {
