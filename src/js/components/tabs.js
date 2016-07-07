@@ -8,12 +8,13 @@ Mivhak.component('tabs', {
     created: function() {
         var $this = this;
         this.$el = this.mivhakInstance.$selection.find('pre').wrapAll(this.$el).parent();
-        $.each(this.mivhakInstance.state.sources,function(i, source){
+        $.each(this.mivhakInstance.resources.data,function(i, source){
             if(source.visible)
                 $this.tabs.push(Mivhak.render('tab-pane',{
                     pre: source.pre, 
                     lang: source.lang,
                     source: source.source,
+                    index: i,
                     mivhakInstance: $this.mivhakInstance
                 }));
         });

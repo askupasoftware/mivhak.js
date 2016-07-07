@@ -8,7 +8,7 @@
   "author": {
     "name": "Askupa Software",
     "url": "http://www.askupasoftware.com",
-    "email": "contact@askupasoftware.com"
+    "email": "hello@askupasoftware.com"
   },
   "main": "GruntFile.js",
   "devDependencies": {

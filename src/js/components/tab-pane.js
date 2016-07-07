@@ -1,11 +1,12 @@
 Mivhak.component('tab-pane', {
     template: '<div class="mivhak-tab-pane"><div class="mivhak-tab-pane-inner"></div></div>',
     props: {
-        pre: null,
-        lang: null,
-        source: null,
-        editor: null,
-        padding: 10,
+        pre:            null,
+        lang:           null,
+        source:         null,
+        editor:         null,
+        index:          null,
+        padding:        10,
         mivhakInstance: null
     },
     created: function() {
@@ -81,6 +82,15 @@ Mivhak.component('tab-pane', {
                 highlightActiveLine: false,
                 fontSize: parseInt(14)
             });
+            
+            // Update source content for the live preview
+            if(this.mivhakInstance.options.editable)
+            {
+                var $this = this;
+                this.editor.getSession().on('change', function(a,b,c) {
+                    $this.mivhakInstance.resources.update($this.index, $this.editor.getValue());
+                });
+            }
         }
     }
 });

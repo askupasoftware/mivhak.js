@@ -77,7 +77,7 @@ Mivhak.defaults = {
  * A list of Mivhak resource default settings (Mivhak resources are any <pre> 
  * elements placed inside a Mivhak wrapper element).
  */
-Mivhak.sourceDefaults = {
+Mivhak.resourceDefaults = {
     
     /**
      * The resource language (one of the supported Ace Editor languages)

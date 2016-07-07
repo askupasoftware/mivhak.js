@@ -1,7 +1,7 @@
 Mivhak.component('live-preview', {
     template: '<iframe class="mivhak-live-preview" allowtransparency="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-modals allow-forms" frameborder="0"></iframe>',
     props: {
-        sources: []
+        resources: []
     },
     methods: {
         renderHTML: function() {
@@ -13,9 +13,9 @@ Mivhak.component('live-preview', {
             head += '<meta name="robots" content="noindex, nofollow">';
             head += '<meta name="googlebot" content="noindex, nofollow">';
             
-            for(var i = 0; i < this.sources.length; i++)
+            for(var i = 0; i < this.resources.count(); i++)
             {
-                var source = this.sources[i];
+                var source = this.resources.get(i);
                 if('markup' === source.runAs) body += source.content;
                 if('style' === source.runAs) head += this.createStyle(source.content, source.visible ? false : source.source);
                 if('script' === source.runAs) head += this.createScript(source.content, source.visible ? false : source.source);

@@ -33,9 +33,9 @@ Mivhak.component('top-bar', {
         },
         createTabNav: function() {
             var source, i, pos = 0;
-            for(i = 0; i < this.mivhakInstance.state.sources.length; i++)
+            for(i = 0; i < this.mivhakInstance.resources.count(); i++)
             {
-                source = this.mivhakInstance.state.sources[i];
+                source = this.mivhakInstance.resources.get(i);
                 if(source.visible) this.createNavTabButton(pos++, source.lang);
             }
         },
