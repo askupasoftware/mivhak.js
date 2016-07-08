@@ -5,4 +5,4 @@ A jQuery plugin that lets you embed and execute code in the browser. Completely 
 Oh, and there's also a [WordPress plugin](https://wordpress.org/plugins/mivhak/).
 
 
-![mivhak.js - syntax highlighter and code runner for the web](http://askupasoftware.com/wp-content/uploads/2014/01/mivhak.png)
+![mivhak.js - syntax highlighter and code runner for the web](http://askupasoftware.com/wp-content/uploads/2014/01/mivhak.gif)
