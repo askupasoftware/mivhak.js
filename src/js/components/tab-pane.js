@@ -77,7 +77,7 @@ Mivhak.component('tab-pane', {
 
             this.editor.setOptions({
                 maxLines: Infinity,
-                firstLineNumber: 1,
+                firstLineNumber: this.resource.startLine,
                 highlightActiveLine: false,
                 fontSize: parseInt(14)
             });

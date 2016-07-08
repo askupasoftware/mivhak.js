@@ -482,7 +482,13 @@ Mivhak.resourceDefaults = {
      * Mark/highlight a range of lines given as a string in the format '1, 3-4'
      * @type bool|string
      */
-    mark:           false
+    mark:           false,
+    
+    /**
+     * Set the initial line number (1 based).
+     * @type Number
+     */
+    startLine:      1
 };var Resources = function() {
     this.data = [];
 };
@@ -1070,7 +1076,7 @@ Mivhak.render = function(name, props)
 
             this.editor.setOptions({
                 maxLines: Infinity,
-                firstLineNumber: 1,
+                firstLineNumber: this.resource.startLine,
                 highlightActiveLine: false,
                 fontSize: parseInt(14)
             });

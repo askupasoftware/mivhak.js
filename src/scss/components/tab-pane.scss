@@ -41,12 +41,23 @@
                 z-index: 0; // Prevent code from overlapping dropdown
             }
             
-            .ace_active-line {
-                background-color: #d6e2e4;
+            .ace_gutter {
+                background-color: transparent;
+                
+                .ace_gutter-active-line {
+                    z-index: -1;
+                }
             }
         }
     }
 }
 
-[miv-theme="light"] .mivhak-tab-pane { background-color: $theme-light-background; }
-[miv-theme="dark"] .mivhak-tab-pane { background-color: $theme-dark-background; }
+[miv-theme="light"] {
+    .mivhak-tab-pane { background-color: $theme-light-background; }
+    .ace_gutter-layer { background-color: $theme-light-background; border-right: 1px solid $theme-light-color; }
+}
+
+[miv-theme="dark"] {
+    .mivhak-tab-pane { background-color: $theme-dark-background; }
+    .ace_gutter-layer { background-color: $theme-dark-background !important; border-right: 1px solid $theme-dark-color; color: $theme-dark-color; }
+}
