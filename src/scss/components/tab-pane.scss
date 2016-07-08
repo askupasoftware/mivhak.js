@@ -43,6 +43,7 @@
             
             .ace_gutter {
                 background-color: transparent;
+                z-index: 0;
                 
                 .ace_gutter-active-line {
                     z-index: -1;

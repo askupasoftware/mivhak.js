@@ -25,6 +25,7 @@ Mivhak.component('dropdown', {
         $(window).click(function(e){
             if(!$(e.target).closest('.mivhak-icon-cog').length) {
                 $this.$el.removeClass('mivhak-dropdown-visible');
+                $this.$el.parent().removeClass('mivhak-button-active');
             }
         });
     },

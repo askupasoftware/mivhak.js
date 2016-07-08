@@ -133,13 +133,14 @@ Mivhak.prototype.calculateHeight = function(h)
         i = this.tabs.tabs.length;
 
     while(i--)
-        heights.push(getEditorHeight($(this.tabs.tabs[i].resource.pre))+padding);
+        heights.unshift(getEditorHeight($(this.tabs.tabs[i].resource.pre))+padding);
 
     if('average' === h) return average(heights);
-    if('shortest' === h) return min(heights);
-    if('longest' === h) return max(heights);
+    if('min' === h) return min(heights);
+    if('max' === h) return max(heights);
     if('auto' === h) return getEditorHeight($(this.activeTab.resource.pre))+padding;
     if(!isNaN(h)) return parseInt(h);
+    return heights[0];
 };
 
 /**
