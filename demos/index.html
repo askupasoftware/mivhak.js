@@ -9,7 +9,7 @@
             body {font-family: Roboto;margin: 0;height: 100%;}
             .box {max-width: 760px;margin:40px auto}
             .dark-bg {background-color: #1b2632;display: flex;}
-            .dark-bg h2, .dark-bg h3 {color: #ecf0f1}
+            .dark-bg h2, .dark-bg h3, .dark-bg p {color: #ecf0f1}
         </style>
     </head>
     <body>
@@ -17,19 +17,18 @@
             <div class="box">
                 <h2>Light Theme</h2>
                 <h3>Simple Code Highlighting</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Embedding a single JavaScript code snippet.</p>
                 <div class="mivhak" miv-theme="light" miv-height="auto">
                     <pre miv-lang="javascript">
-function max( arr )
+function sayHello()
 {
-    var i = arr.length, maxval = arr[--i];
-    while(i--) if(arr[i] > maxval) maxval = arr[i];
-    return maxval;
+    console.log("Hello from Mivhak!");
 }
                     </pre>
                 </div>
                 
                 <h3>Collapsed Code</h3>
+                <p>You can also hide your code initially behind a "Show Code" button. Once clicked, the code will be expanded.</p>
                 <div class="mivhak" miv-theme="light" miv-height="auto" miv-collapsed="true">
                     <pre miv-lang="javascript">
 function max( arr )
@@ -42,7 +41,8 @@ function max( arr )
                 </div>
                 
                 <h3>Custom Accent Color</h3>
-                <div class="mivhak" miv-theme="light" miv-accent-color="#27ae60" miv-height="100">
+                <p>You can customize Mivhak to match the colors of your brand. Since Mivhak implements its own scrollbars, you can also control their color.</p>
+                <div class="mivhak" miv-theme="light" miv-accent-color="#27ae60" miv-height="110">
                     <pre miv-lang="javascript">
 function max( arr )
 {
@@ -54,6 +54,7 @@ function max( arr )
                 </div>
                 
                 <h3>No top bar</h3>
+                <p>To make things simple, you can hide the top bar and show only the code itself.</p>
                 <div class="mivhak" miv-theme="light" miv-height="auto" miv-topbar="false">
                     <pre miv-lang="javascript">
 // Some cool code goes here...
@@ -61,26 +62,33 @@ function max( arr )
                 </div>
                 
                 <h3>Remote code embedding</h3>
+                <p>You can embed code from a remote URL by using the <code class="mivhak-inline" miv-theme="light">miv-source</code> attribute.</p>
                 <div class="mivhak" miv-theme="light" miv-height="200" miv-caption="wp-dynamic-css/functions.php via <a href='https://github.com/askupasoftware/wp-dynamic-css/blob/master/functions.php'>GitHub</a>">
                     <pre miv-lang="php" miv-source="https://raw.githubusercontent.com/askupasoftware/wp-dynamic-css/master/functions.php"></pre>
                 </div>
                 
                 <h3>Line Marking/Highlighting</h3>
-                <div class="mivhak" miv-theme="light" miv-height="auto" miv-caption="Highlighting/marking lines 3, 5-7">
-                    <pre miv-lang="javascript" miv-mark="3, 5-7">
-function max( arr )
+                <p>Highlight selected lines and ranges with a straightforward syntax. For example, <code class="mivhak-inline" miv-theme="light">3, 5-7</code>.</p>
+                <div class="mivhak" miv-theme="light" miv-height="auto" miv-caption="Highlighting/marking lines 3, 6-10">
+                    <pre miv-lang="javascript" miv-mark="3, 6-10">
+function sum_prime( max )
 {
-    var i = arr.length, maxval = arr[--i];
-    while(i--) if(arr[i] > maxval) maxval = arr[i]; // Just a long comment to show the bottom scrollbar (turn off wrap lines)
-    return maxval;
-    var i = arr.length, maxval = arr[--i];
-    while(i--) if(arr[i] > maxval) maxval = arr[i]; // Just a long comment to show the bottom scrollbar (turn off wrap lines)
-    return maxval;
+    var sum = 0,
+        a = 1;
+
+    while( a &lt; max )
+    {
+        if( isPrime(a) ) sum += a;
+        a++;
+    }
+
+    return sum;
 }
                     </pre>
                 </div>
                 
                 <h3>Line Numbers with a Custom Starting Line</h3>
+                <p>Show line numbers, and optionally specify a custom starting line.</p>
                 <div class="mivhak" miv-theme="light" miv-height="auto" miv-line-numbers="true">
                     <pre miv-lang="javascript" miv-start-line="15">
 function max( arr )
@@ -93,7 +101,8 @@ function max( arr )
                 </div>
                 
                 <h3>Live Code Previewing</h3>
-                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="average" miv-caption="<a href='http://codepen.io/V17h3m/pen/LZZKJm'>Rainbow Brush</a> curtesy of Vicio Bonura">
+                <p>Add a live preview to your code by using the <code class="mivhak-inline" miv-theme="light">miv-runnable="true"</code> attribute. Turn your code into a sandbox by adding the <code class="mivhak-inline" miv-theme="light">miv-editable="true"</code> attribute.</p>
+                <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="light" miv-line-numbers="false" miv-height="300" miv-caption="<a href='http://codepen.io/V17h3m/pen/LZZKJm'>Rainbow Brush</a> curtesy of Vicio Bonura">
                     <pre miv-visible="false" miv-run-as="script" miv-source="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></pre>
                     <pre miv-visible="false" miv-run-as="style" miv-source="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"></pre>
                     <pre miv-lang="html" miv-run-as="markup">
@@ -191,7 +200,7 @@ h1{
         <div class="dark-bg">
             <div class="box">
                 <h2>Dark Theme</h2>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+                <p>Mivhak also comes with a dark theme. Simply use the <code class="mivhak-inline" miv-theme="dark">miv-theme="dark"</code> attribute to push Mivhak to the dark side...</p>
                 <div class="mivhak" miv-runnable="true" miv-editable="true" miv-collapsed="false" miv-theme="dark">
                     <pre miv-lang="html" miv-run-as="markup">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -202,20 +211,7 @@ h1{
     &lt;/body&gt;
 &lt;/html&gt;
                     </pre>
-                    <pre miv-lang="javascript" miv-run-as="script">
-function add(x, y) {
-    var resultString = "Hello, ACE! The result of your math is: ";
-    var result = x + y;
-    return resultString + result;
-}
-
-var addResult = add(3, 2);
-console.log(addResult);
-                    </pre>
-                    <pre miv-lang="css" miv-run-as="style">
-                    body {background: blue}
-                    </pre>
-                    <div class="mivhak-caption">Caption Text Here....</div>
+                    <div class="mivhak-caption">Just some HTML, move along...</div>
                 </div>
                 
                 <h3>Line Numbers with a Custom Starting Line</h3>
@@ -249,7 +245,7 @@ function max( arr )
         
         <!-- scripts -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
-        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
         <script src="../src/js/lib/jquery.mousewheel.js"></script>
         <script src="../build/mivhak-dev.js"></script>
         <script>$('.mivhak').mivhak();</script>

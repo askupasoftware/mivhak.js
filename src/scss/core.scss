@@ -11,3 +11,12 @@
         margin: 30px auto;
     }
 }
+
+.mivhak-inline {
+    font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+    font-size: 0.9em;
+    padding: 0.2em 0.6em;
+    
+    &[miv-theme="light"] {background-color: $theme-light-background;}
+    &[miv-theme="dark"] {background-color: $theme-dark-background;}
+}
