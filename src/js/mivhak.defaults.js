@@ -10,21 +10,22 @@ Mivhak.defaults = {
     runnable:       false,
     
     /**
-     * Whther to allow the user to edit the code
+     * Whether to allow the user to edit the code. If runnable is set to true, 
+     * the live preview will be updated when the code changes.
      * @type Boolean
      */
     editable:       false,
     
     /**
-     * Whether to show line numers on the left
+     * Whether to show line numbers on the left
      * @type Boolean
      */
     lineNumbers:    false,
     
     /**
-     * One of the supported CSS color values (HEX, RGB, etc...) to set as the 
-     * code viewer's accent color. Controls the scrollbars, tab navigation and 
-     * dropdown item colors.
+     * One of the supported CSS color formats (HEX, RGB, etc...) to be used as 
+     * the code viewer's accent color. The color will be applied to scrollbars, 
+     * tab navigation and dropdown items. 
      * @type String
      */
     accentColor:    false,
