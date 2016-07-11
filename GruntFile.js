@@ -22,7 +22,8 @@ module.exports = function(grunt) {
         concat: {
             css: {
                 options: {
-                    banner: '<%= banner %>'
+                    banner: '<%= banner %>',
+                    separator: ''
                 },
                 files: {
                     '<%= dirs.build %>/mivhak.min.css': [
