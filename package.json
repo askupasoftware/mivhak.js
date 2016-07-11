@@ -1,9 +1,10 @@
 {
   "name": "mivhak-js",
-  "nicename": "Mivhak Code Viewer",
+  "nicename": "Mivhak.js",
   "version": "1.0.0",
-  "tagline": "JavaScript code viewer for the web",
-  "description": "A lightweight yet fully-featured code viewer with support for tabs, live preview and remote code viewing",
+  "tagline": "Showcase your code, beautifully",
+  "description": "A jQuery plugin that lets you embed and execute code in the browser. Completely customizable, fully brandable.",
+  "keywords": ["jquery","jquery-plugin","code", "syntax", "highlighting"],
   "url": "http://products.askupasoftware.com/mivhak-js",
   "author": {
     "name": "Askupa Software",
