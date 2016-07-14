@@ -2,6 +2,7 @@
 @import 'compass/css3';
 
 .mivhak {
+    direction: ltr !important;
     font-family: Roboto, Arial, sans-serif;
     position: relative;
     margin: 60px auto;
@@ -13,6 +14,9 @@
 }
 
 .mivhak-inline {
+    direction: ltr !important;
+    unicode-bidi: bidi-override;
+    display: inline;
     font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
     font-size: 0.9em;
     padding: 0.2em 0.6em;

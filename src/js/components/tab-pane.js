@@ -15,7 +15,6 @@ Mivhak.component('tab-pane', {
         this.$el = $(this.resource.pre).wrap(this.$el).parent().parent();
         this.$el.find('.mivhak-tab-pane-inner').css({margin: this.mivhakInstance.options.padding});
         this.setScrollbars();
-        
     },
     methods: {
         getTheme: function() {
@@ -85,11 +84,31 @@ Mivhak.component('tab-pane', {
             // Update source content for the live preview
             if(this.mivhakInstance.options.editable)
             {
-                var $this = this;
-                this.editor.getSession().on('change', function(a,b,c) {
-                    $this.mivhakInstance.resources.update($this.index, $this.editor.getValue());
-                });
+                this.editor.getSession().on('change', (function() {
+                    this.mivhakInstance.resources.update(this.index, this.editor.getValue());
+                }).bind(this));
             }
+            
+            // Move view to show cursor position when the cursor moves
+            this.editor.session.selection.on("changeCursor", (function(e){
+                e.preventDefault();
+                raf((function(){
+                    var cursor = this.$el.find('.ace_cursor')[0].getBoundingClientRect(),
+                        viewport = this.$el.find('.mivhak-tab-pane-inner')[0].getBoundingClientRect(),
+                        up =  viewport.top - cursor.top,
+                        down = cursor.top + cursor.height - viewport.top - viewport.height,
+                        left = parseInt(this.$el.find('.ace_content').css('margin-left').replace('px',''));
+
+                    // Move the scrollbar vertically only if the cursor leaves the viewport
+                    this.vscroll.doScroll('up',Math.max(0, up)); //
+                    this.vscroll.doScroll('down',Math.max(0, down));
+                    this.vscroll.moveBar();
+                    
+                    // Ace Editor automatically moves the viewport, so we just need to move the scrollbar accordingly
+                    this.hscroll.state.l = -left;
+                    this.hscroll.moveBar();
+                }).bind(this));
+            }).bind(this));
         },
         markLines: function()
         {
