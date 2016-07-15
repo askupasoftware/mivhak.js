@@ -3,6 +3,7 @@
 
 .mivhak-notifier {
     position: absolute;
+    font-size: 16px;
     margin: 8px;
     text-align: center;
     padding: 10px;
@@ -25,6 +26,26 @@
     
     &.mivhak-button {
         cursor: pointer;
+    }
+    
+    &.mivhak-dismissible .mivhak-times {
+        display: block;
+        position: absolute;
+        right: 0;
+        font-size: 1.4em;
+        top: 50%;
+        padding: 0 10px;
+        cursor:pointer;
+        @include transform( translateY(-50%) );
+        @include opacity(0.8);
+        
+        &:hover {
+            @include opacity(1);
+        }
+    }
+    
+    .mivhak-times {
+        display: none;
     }
 }
 

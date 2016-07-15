@@ -26,7 +26,7 @@ Mivhak.buttons = {
     },
     
     /**
-     * The collapse button toggles the entire code viewer into and out of its
+     * The collapse button toggles the entire code block into and out of its
      * collapsed state.
      */
     collapse: {
@@ -42,7 +42,7 @@ Mivhak.buttons = {
     about: {
         text: 'About Mivhak',
         click: function(e) {
-            this.notifier.closableNotification('Mivhak.js v1.0.0');
+            this.notifier.dismissibleNotification('Mivhak.js v1.0.0 | <a href="http://products.askupasoftware.com/mivhak-js/">Official Page</a>');
         }
     }
 };

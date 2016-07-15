@@ -36,19 +36,19 @@ Mivhak.methods = {
     },
     
     /**
-     * Collapse the code viewer and show a "Show Code" button.
+     * Collapse the viewport and show a "Show Code" button.
      */
     collapse: function() {
         if(this.state.collapsed) return;
         var $this = this;
         this.state.collapsed = true;
-        this.notifier.closableNotification('Show Code', function(){$this.callMethod('expand');});
+        this.notifier.callbackNotification('Show Code', function(){this.hide();$this.callMethod('expand');});
         this.$selection.addClass('mivhak-collapsed');
         this.callMethod('setHeight',this.notifier.$el.outerHeight(true));
     },
     
     /**
-     * Expand the code viewer if it's collapsed;
+     * Expand the viewport if it's collapsed;
      */
     expand: function() {
         if(!this.state.collapsed) return;
@@ -70,7 +70,7 @@ Mivhak.methods = {
     },
     
     /**
-     * Set the height of the code viewer. One of (auto|min|max|average) or 
+     * Set the height of the viewport. One of (auto|min|max|average) or 
      * a custom number.
      * @param {string|number} height
      */
@@ -88,7 +88,7 @@ Mivhak.methods = {
     },
     
     /**
-     * Set the code viewer's accent color. Applied to the nav-tabs text color, 
+     * Set Mivhak's accent color. Applied to the nav-tabs text color, 
      * underline, scrollbars and dropdown menu text color.
      * 
      * @param {string} color
