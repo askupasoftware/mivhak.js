@@ -37,8 +37,9 @@
     
     .mivhak-top-bar-button {
         display: inline-block;
-        padding: 0.9em 1.2em;
+        padding: 11px 14px;
         font-size: 12px;
+        line-height: 14px;
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
@@ -46,6 +47,7 @@
         
         &.mivhak-icon {
             line-height: 0;
+            box-sizing: content-box;
             height: 15px;
             width: 15px;
             vertical-align: middle;

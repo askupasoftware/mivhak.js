@@ -2,7 +2,7 @@
  * Package:      mivhak-js
  * URL:          http://products.askupasoftware.com/mivhak-js
  * Version:      1.0.0
- * Date:         2016-07-13
+ * Date:         2016-07-15
  * Dependencies: jQuery Mousewheel, Ace Editor
  * License:      GNU GENERAL PUBLIC LICENSE
  *
@@ -190,7 +190,7 @@ Mivhak.methodExists = function( method )
 };
 
 /**
- * Initiate the code viewer.
+ * Initiate Mivhak.
  */
 Mivhak.prototype.init = function() 
 {
@@ -212,6 +212,9 @@ Mivhak.prototype.applyOptions = function()
     if(this.options.collapsed) this.callMethod('collapse');
     if(!this.options.topbar) this.$selection.addClass('mivhak-no-topbar');
     else this.$selection.removeClass('mivhak-no-topbar');
+    
+    // If the theme option was set through jQuery, set the attribute
+    this.$selection.attr('miv-theme',this.options.theme);
     
     this.createCaption();
     this.createLivePreview();
@@ -384,32 +387,32 @@ Mivhak.defaults = {
     
     /**
      * One of the supported CSS color formats (HEX, RGB, etc...) to be used as 
-     * the code viewer's accent color. The color will be applied to scrollbars, 
+     * Mivhak's accent color. The color will be applied to scrollbars, 
      * tab navigation and dropdown items. 
      * @type String
      */
     accentColor:    false,
     
     /**
-     * Whether to collapse the code viewer initially
+     * Whether to collapse the viewport initially
      * @type Boolean
      */
     collapsed:      false,
     
     /**
-     * Text/HTML string to be displayed at the bottom of the code viewer
+     * Text/HTML string to be displayed at the bottom of the embedded code block
      * @type Boolean|string
      */
     caption:        false,
     
     /**
-     * The code viewer's theme. One of (dark|light)
+     * Mivhak's theme. One of (dark|light)
      * @type String
      */
     theme:          'light',
     
     /**
-     * The code viewer's height. Either a number (for a custom height in pixels) 
+     * The viewport's height. Either a number (for a custom height in pixels) 
      * or one of (auto|min|max|average).
      * @type String|Number
      */
@@ -559,7 +562,7 @@ Mivhak.buttons = {
     },
     
     /**
-     * The collapse button toggles the entire code viewer into and out of its
+     * The collapse button toggles the entire code block into and out of its
      * collapsed state.
      */
     collapse: {
@@ -575,7 +578,7 @@ Mivhak.buttons = {
     about: {
         text: 'About Mivhak',
         click: function(e) {
-            this.notifier.closableNotification('Mivhak.js v1.0.0');
+            this.notifier.dismissibleNotification('Mivhak.js v1.0.0 | <a href="http://products.askupasoftware.com/mivhak-js/">Official Page</a>');
         }
     }
 };/**
@@ -616,19 +619,19 @@ Mivhak.methods = {
     },
     
     /**
-     * Collapse the code viewer and show a "Show Code" button.
+     * Collapse the viewport and show a "Show Code" button.
      */
     collapse: function() {
         if(this.state.collapsed) return;
         var $this = this;
         this.state.collapsed = true;
-        this.notifier.closableNotification('Show Code', function(){$this.callMethod('expand');});
+        this.notifier.callbackNotification('Show Code', function(){this.hide();$this.callMethod('expand');});
         this.$selection.addClass('mivhak-collapsed');
         this.callMethod('setHeight',this.notifier.$el.outerHeight(true));
     },
     
     /**
-     * Expand the code viewer if it's collapsed;
+     * Expand the viewport if it's collapsed;
      */
     expand: function() {
         if(!this.state.collapsed) return;
@@ -650,7 +653,7 @@ Mivhak.methods = {
     },
     
     /**
-     * Set the height of the code viewer. One of (auto|min|max|average) or 
+     * Set the height of the viewport. One of (auto|min|max|average) or 
      * a custom number.
      * @param {string|number} height
      */
@@ -668,7 +671,7 @@ Mivhak.methods = {
     },
     
     /**
-     * Set the code viewer's accent color. Applied to the nav-tabs text color, 
+     * Set Mivhak's accent color. Applied to the nav-tabs text color, 
      * underline, scrollbars and dropdown menu text color.
      * 
      * @param {string} color
@@ -984,13 +987,24 @@ Mivhak.render = function(name, props)
 });Mivhak.component('notifier', {
     template: '<div class="mivhak-notifier"></div>',
     methods: {
+        /**
+         * Internally used to show a notification
+         * @param {String} html
+         */
         notification: function(html) {
             if(!html) return;
             clearTimeout(this.timeout);
-            this.$el.off('click');
             this.$el.html(html);
             this.$el.addClass('mivhak-visible');
         },
+        
+        /**
+         * Show a notification that will be automatically dismissed after the 
+         * given timeout has passed
+         * 
+         * @param {String} html
+         * @param {Number} timeout
+         */
         timedNotification: function(html, timeout) {
             var $this = this;
             this.notification(html);
@@ -998,19 +1012,41 @@ Mivhak.render = function(name, props)
                 $this.hide();
             },timeout);
         },
-        closableNotification: function(html, onclick)
+        
+        /**
+         * Show a notification that can be dismissed by clicking on the X button
+         * @param {String} html
+         * @param {Function} onclick
+         */
+        dismissibleNotification: function(html, onclick)
         {
-            var $this = this;
+            var $this = this,
+                $times = $('<div>',{class:'mivhak-times',html:'&#215;'}).click(function(){$this.hide();});
             this.notification(html);
-            this.$el.addClass('mivhak-button');
-            this.$el.click(function(e){
-                $this.hide();
+            this.$el.append($times).addClass('mivhak-dismissible').click(function(e){
                 if(typeof onclick !== 'undefined')
                     onclick.call(null, e);
             });
         },
+        
+        /**
+         * Show a notification that will execute a callback once clicked
+         * @param {String} html
+         * @param {Function} onclick
+         */
+        callbackNotification: function(html, onclick)
+        {
+            var $this = this;
+            this.notification(html);
+            this.$el.addClass('mivhak-button').click(function(e){
+                if(typeof onclick !== 'undefined')
+                    onclick.call($this, e);
+            });
+        },
+        
         hide: function() {
-            this.$el.removeClass('mivhak-visible mivhak-button');
+            this.$el.removeClass('mivhak-visible mivhak-button mivhak-dismissible');
+            this.$el.off('click');
         }
     }
 });Mivhak.component('tab-pane', {
@@ -1041,7 +1077,7 @@ Mivhak.render = function(name, props)
                 $.ajax(this.resource.source).done(function(res){
                     $this.editor.setValue(res,-1);
                     
-                    // Refresh code viewer height
+                    // Refresh viewport height
                     $this.mivhakInstance.callMethod('setHeight',$this.mivhakInstance.options.height);
                     
                     // Refresh scrollbars
@@ -1208,7 +1244,7 @@ Mivhak.render = function(name, props)
     },
     created: function() {
         var $this = this;
-        this.$el.text(this.text);
+        if(this.text) this.$el.text(this.text);
         if(this.icon) this.$el.addClass('mivhak-icon mivhak-icon-'+this.icon).append($(Mivhak.icons[this.icon]));
         if(this.dropdown) 
         {

@@ -2,7 +2,7 @@ Mivhak.component('notifier', {
     template: '<div class="mivhak-notifier"></div>',
     methods: {
         /**
-         * 
+         * Internally used to show a notification
          * @param {String} html
          */
         notification: function(html) {
@@ -13,6 +13,8 @@ Mivhak.component('notifier', {
         },
         
         /**
+         * Show a notification that will be automatically dismissed after the 
+         * given timeout has passed
          * 
          * @param {String} html
          * @param {Number} timeout
@@ -26,7 +28,7 @@ Mivhak.component('notifier', {
         },
         
         /**
-         * 
+         * Show a notification that can be dismissed by clicking on the X button
          * @param {String} html
          * @param {Function} onclick
          */
@@ -42,7 +44,7 @@ Mivhak.component('notifier', {
         },
         
         /**
-         * 
+         * Show a notification that will execute a callback once clicked
          * @param {String} html
          * @param {Function} onclick
          */

@@ -24,32 +24,32 @@ Mivhak.defaults = {
     
     /**
      * One of the supported CSS color formats (HEX, RGB, etc...) to be used as 
-     * the code viewer's accent color. The color will be applied to scrollbars, 
+     * Mivhak's accent color. The color will be applied to scrollbars, 
      * tab navigation and dropdown items. 
      * @type String
      */
     accentColor:    false,
     
     /**
-     * Whether to collapse the code viewer initially
+     * Whether to collapse the viewport initially
      * @type Boolean
      */
     collapsed:      false,
     
     /**
-     * Text/HTML string to be displayed at the bottom of the code viewer
+     * Text/HTML string to be displayed at the bottom of the embedded code block
      * @type Boolean|string
      */
     caption:        false,
     
     /**
-     * The code viewer's theme. One of (dark|light)
+     * Mivhak's theme. One of (dark|light)
      * @type String
      */
     theme:          'light',
     
     /**
-     * The code viewer's height. Either a number (for a custom height in pixels) 
+     * The viewport's height. Either a number (for a custom height in pixels) 
      * or one of (auto|min|max|average).
      * @type String|Number
      */

@@ -14,7 +14,7 @@ Mivhak.component('top-bar-button', {
     },
     created: function() {
         var $this = this;
-        this.$el.text(this.text);
+        if(this.text) this.$el.text(this.text);
         if(this.icon) this.$el.addClass('mivhak-icon mivhak-icon-'+this.icon).append($(Mivhak.icons[this.icon]));
         if(this.dropdown) 
         {

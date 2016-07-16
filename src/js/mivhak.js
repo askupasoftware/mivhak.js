@@ -25,7 +25,7 @@ Mivhak.methodExists = function( method )
 };
 
 /**
- * Initiate the code viewer.
+ * Initiate Mivhak.
  */
 Mivhak.prototype.init = function() 
 {
@@ -47,6 +47,9 @@ Mivhak.prototype.applyOptions = function()
     if(this.options.collapsed) this.callMethod('collapse');
     if(!this.options.topbar) this.$selection.addClass('mivhak-no-topbar');
     else this.$selection.removeClass('mivhak-no-topbar');
+    
+    // If the theme option was set through jQuery, set the attribute
+    this.$selection.attr('miv-theme',this.options.theme);
     
     this.createCaption();
     this.createLivePreview();

@@ -26,7 +26,7 @@ Mivhak.component('tab-pane', {
                 $.ajax(this.resource.source).done(function(res){
                     $this.editor.setValue(res,-1);
                     
-                    // Refresh code viewer height
+                    // Refresh viewport height
                     $this.mivhakInstance.callMethod('setHeight',$this.mivhakInstance.options.height);
                     
                     // Refresh scrollbars
